@@ -2,18 +2,37 @@
 <html>
 
    <head>
+      <link rel="stylesheet" href="../external/css/bootstrap.css">
       <script src="../external/js/angular.js"></script>
       <script src="../external/js/underscore.js"></script>
       <script src="../js/index.js"></script>
+      <style type="text/css">
+         .faku{
+            border: 2px solid black
+         }
+      </style>
    </head>
 
    <body ng-app="lolApp">
 
-      <div ng-controller="MainCtrl">
+      <div class="row">
          
-         <input type="text" ng-model="selectedChamp">
-         <div ng-repeat="champion in champions | filter:selectedChamp">
-            {{champion}}
+         <div class="faku col-md-4" ng-controller="LeftSummonerCtrl">
+            <input type="text" ng-model="selectedChamp">
+            <div ng-repeat="champion in champions | filter:selectedChamp">
+               {{champion}}
+            </div>
+         </div>
+
+         <div class="faku col-md-4" ng-controller="StatComparisonCtrl">
+            faku
+         </div>
+
+         <div class="faku col-md-4" ng-controller="RightSummonerCtrl">
+            <input type="text" ng-model="selectedChamp" >
+            <div ng-repeat="champion in champions | filter:selectedChamp">
+               {{champion}}
+            </div>
          </div>
 
       </div>
