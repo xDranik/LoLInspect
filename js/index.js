@@ -1,6 +1,7 @@
 var lolApp = angular.module('lolApp', []);
 
 lolApp.controller('LeftSummonerCtrl', function($scope){
+   //place champion list in a factory so both controllers can access it
    $scope.champions = [
       'Aatrox',
       'Kassadin',
@@ -18,6 +19,7 @@ lolApp.controller('LeftSummonerCtrl', function($scope){
 });
 
 lolApp.controller('RightSummonerCtrl', function($scope){
+   //place champion list in a factory so both controllers can access it
    $scope.champions = [
       'Aatrox',
       'Kassadin',
