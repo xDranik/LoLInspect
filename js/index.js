@@ -16,7 +16,7 @@ lolApp.controller('RightSummonerCtrl', function($scope){
    }
 });
 
-lolApp.controller('StatComparisonCtrl', function($scope){
+lolApp.controller('ComparisonCtrl', function($scope){
    //todo
 });
 
