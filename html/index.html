@@ -3,9 +3,6 @@
 
    <head>
       <link rel="stylesheet" href="../external/css/bootstrap.css">
-      <script src="../external/js/angular.js"></script>
-      <script src="../external/js/underscore.js"></script>
-      <script src="../js/index.js"></script>
       <style type="text/css">
          .op-border{
             border: 2px solid black
@@ -42,31 +39,42 @@
 
       <div class="container margin-top-100">
          <div class="jumbotron">
-            <h1>LoL app stuffs</h1>
+            <h1>Ranked Stat Comparison</h1>
             <p>Hi, my name is paragraph</p>
          </div>
       </div>
 
-      <div class="row">
-         
-         <div class="op-border col-md-4" ng-controller="LeftSummonerCtrl">
+      <div class="container">
 
-            <summoner-form></summoner-form>
+         <div class="row">
+            
+            <div class="col-md-4" ng-controller="LeftSummonerCtrl">
+
+               <summoner-form></summoner-form>
+
+               <div ng-show="showSummoner">
+                  <hr>Results:
+
+               </div>
+
+            </div>
+
+            <div class="op-border col-md-4" ng-controller="ComparisonCtrl">
+               Placeholder text
+            </div>
+
+            <div class="op-border col-md-4" ng-controller="RightSummonerCtrl">
+
+               <summoner-form></summoner-form>
+
+            </div>
 
          </div>
-
-         <div class="op-border col-md-4" ng-controller="ComparisonCtrl">
-            Placeholder text
-         </div>
-
-         <div class="op-border col-md-4" ng-controller="RightSummonerCtrl">
-
-            <summoner-form></summoner-form>
-
-         </div>
-
       </div>
 
+      <script src="../external/js/angular.js"></script>
+      <script src="../external/js/underscore.js"></script>
+      <script src="../js/index.js"></script>
    </body>
 
 </html>
