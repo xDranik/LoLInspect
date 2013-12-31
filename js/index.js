@@ -5,6 +5,7 @@ lolApp.controller('LeftSummonerCtrl', function($scope, $http){
    $scope.regions = ['NA', 'EUW', 'EUNE'];
    $scope.region = $scope.regions[0];
    $scope.showSummoner = false;
+   $scope.apikey = '???';
 
    $scope.querySummoner = function(){
 
@@ -16,7 +17,7 @@ lolApp.controller('LeftSummonerCtrl', function($scope, $http){
 
 function getSummonerIDFromName($scope, $http){
    var region = $scope.region.toLowerCase();
-   var summonerName = $scope.summonerName || 'hi';
+   var summonerName = $scope.summonerName || '';
 
    if(summonerName.length < 3 || summonerName.length > 16){
       //don't query, show no matches?
@@ -27,7 +28,7 @@ function getSummonerIDFromName($scope, $http){
    $http({
       method: 'GET', 
       url: 'http://prod.api.pvp.net/api/lol/'+region+'/v1.2/summoner/by-name/'+
-            summonerName+'?api_key=19c807fc-2497-4816-af7a-7f394e57c3ae'
+            summonerName+'?api_key='+$scope.apikey
    })
    .success(function(data, status, headers, config){
 
@@ -47,6 +48,19 @@ function getSummonerIDFromName($scope, $http){
 }
 
 function getSummonerRankedStats($scope, $http, summonerID){
+
+   var region = $scope.region.toLowerCase();
+   $http({
+      method: 'GET',
+      url: 'http://prod.api.pvp.net/api/lol/'+region+'/v1.2/stats/by-summoner/' +
+      summonerID+'/ranked?season=SEASON3&api_key='+$scope.apikey
+   })
+   .success(function(data, status, headers, config){
+      console.log(data);
+   })
+   .error(function(data, status, headers, config){
+      console.log('faku in get ranked stats');
+   });
 
 }
 
