@@ -15,7 +15,7 @@ lolApp.controller('LeftSummonerCtrl', function($scope, $http, StatCompareService
    $scope.regions = ['NA', 'EUW', 'EUNE'];
    $scope.region = $scope.regions[0];
    $scope.showSummoner = false;
-   $scope.apikey = '19c807fc-2497-4816-af7a-7f394e57c3ae';//REMOVE KEY BEFORE COMMIT
+   $scope.apikey = '???';
 
    $scope.champions = [];
 
@@ -39,7 +39,7 @@ lolApp.controller('RightSummonerCtrl', function($scope, $http, StatCompareServic
    $scope.regions = ['NA', 'EUW', 'EUNE'];
    $scope.region = $scope.regions[0];
    $scope.showSummoner = false;
-   $scope.apikey = '19c807fc-2497-4816-af7a-7f394e57c3ae';//REMOVE KEY BEFORE COMMIT
+   $scope.apikey = '???';
 
    $scope.champions = [];
 
