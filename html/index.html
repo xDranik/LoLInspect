@@ -52,20 +52,23 @@
 
                <summoner-form></summoner-form>
 
-               <div ng-show="showSummoner">
-                  <hr>Results:
-
-               </div>
+               <champion-list></champion-list>
 
             </div>
 
             <div class="op-border col-md-4" ng-controller="ComparisonCtrl">
-               Placeholder text
+               
+               <h3 ng-bind="leftChampionName.leftChampionData.name"></h3>
+               <h3 style="text-align:center">vs.</h3>
+               <h3 ng-bind="rightChampionName.rightChampionData.name" style="text-align:right"></h3>
+
             </div>
 
-            <div class="op-border col-md-4" ng-controller="RightSummonerCtrl">
+            <div class="col-md-4" ng-controller="RightSummonerCtrl">
 
                <summoner-form></summoner-form>
+
+               <champion-list></champion-list>
 
             </div>
 
