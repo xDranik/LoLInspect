@@ -15,7 +15,7 @@ lolApp.controller('LeftSummonerCtrl', function($scope, $http, StatCompareService
    $scope.regions = ['NA', 'EUW', 'EUNE'];
    $scope.region = $scope.regions[0];
    $scope.showSummoner = false;
-   $scope.apikey = '???';
+   $scope.apikey = '19c807fc-2497-4816-af7a-7f394e57c3ae';//REMOVE KEY BEFORE COMMIT
 
    $scope.champions = [];
 
@@ -39,7 +39,7 @@ lolApp.controller('RightSummonerCtrl', function($scope, $http, StatCompareServic
    $scope.regions = ['NA', 'EUW', 'EUNE'];
    $scope.region = $scope.regions[0];
    $scope.showSummoner = false;
-   $scope.apikey = '???';
+   $scope.apikey = '19c807fc-2497-4816-af7a-7f394e57c3ae';//REMOVE KEY BEFORE COMMIT
 
    $scope.champions = [];
 
@@ -59,6 +59,35 @@ lolApp.controller('ComparisonCtrl', function($scope, StatCompareService){
 
    $scope.leftChampionName = StatCompareService;
    $scope.rightChampionName = StatCompareService;
+   $scope.statTableRows = [];
+
+   $scope.compareStats = function(){
+      console.log('faku');
+
+      $scope.statTableRows = [];
+      var tmpStatTableRows = [];
+
+      for(var stat in StatCompareService.leftChampionData.stats){
+
+         tmpStatTableRows.push(
+            {
+               leftStats: StatCompareService.leftChampionData.stats[stat],
+               statName: stat,
+               rightStats: StatCompareService.rightChampionData.stats[stat]
+            }
+         );
+
+      }
+
+      $scope.statTableRows = tmpStatTableRows.filter(function(row){
+         return row.leftStats > 0 || row.rightStats > 0;
+      }).map(function(row){
+         row.statName = fromCamelCase(row.statName);
+         return row;
+      });
+
+      console.log($scope.statTableRows);
+   }
 
 });
 
@@ -144,6 +173,14 @@ function getSummonerRankedStats($scope, $http, summonerID){
 
 }
 
-function handleStatResponse($scope){
+function fromCamelCase(string){
+
+   return string[0].toUpperCase() + 
+      string.substring(1, string.length)
+         .replace(/[A-Z]/g, function(match){return ' ' + match.toLowerCase();})
 
 }
+
+
+
+

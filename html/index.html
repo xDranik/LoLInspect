@@ -5,7 +5,7 @@
       <link rel="stylesheet" href="../external/css/bootstrap.css">
       <style type="text/css">
          .op-border{
-            border: 2px solid black
+            /*border: 2px solid black*/
          }
          .margin-top-10{
             margin-top: 10px;
@@ -44,11 +44,13 @@
          </div>
       </div>
 
+
       <div class="container">
 
          <div class="row">
             
-            <div class="col-md-4" ng-controller="LeftSummonerCtrl">
+            <!-- Code for left side summoner and champion selection -->
+            <div class="op-border col-md-3" ng-controller="LeftSummonerCtrl">
 
                <summoner-form></summoner-form>
 
@@ -56,15 +58,37 @@
 
             </div>
 
-            <div class="op-border col-md-4" ng-controller="ComparisonCtrl">
+
+            <!-- Code for center statistics comparison -->
+            <div class="op-border col-md-5 col-xs-offset-half" ng-controller="ComparisonCtrl">
                
                <h3 ng-bind="leftChampionName.leftChampionData.name"></h3>
                <h3 style="text-align:center">vs.</h3>
                <h3 ng-bind="rightChampionName.rightChampionData.name" style="text-align:right"></h3>
 
+               <button type="button" class="btn btn-danger" ng-show="leftChampionName.leftChampionData.name != '?' && rightChampionName.rightChampionData.name != '?'" style="margin-left: 33%" ng-click="compareStats()">
+                  Compare Stats!
+               </button>
+
+               <div ng-show="statTableRows.length > 0">
+               <!-- <div> -->
+                  <hr>
+                  <p>Results:</p>
+                  
+                  <table class="table">
+                     <tr ng-repeat="statRow in statTableRows">
+                        <td style="text-align:right">{{statRow.leftStats}}</td>
+                        <td style="text-align:center">{{statRow.statName}}</td>
+                        <td style="text-align:right">{{statRow.rightStats}}</td>
+                     </tr>
+                  </table>
+
+               </div>
+
             </div>
 
-            <div class="col-md-4" ng-controller="RightSummonerCtrl">
+            <!-- Code for right side summoner and champion selection -->
+            <div class="op-border col-md-3 col-xs-offset-half" ng-controller="RightSummonerCtrl">
 
                <summoner-form></summoner-form>
 
