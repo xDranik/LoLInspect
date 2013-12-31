@@ -15,7 +15,7 @@ lolApp.controller('LeftSummonerCtrl', function($scope, $http, StatCompareService
    $scope.regions = ['NA', 'EUW', 'EUNE'];
    $scope.region = $scope.regions[0];
    $scope.showSummoner = false;
-   $scope.apikey = '???';
+   $scope.apikey = '19c807fc-2497-4816-af7a-7f394e57c3ae';//REMOVE KEY BEFORE COMMIT
 
    $scope.champions = [];
 
@@ -39,7 +39,7 @@ lolApp.controller('RightSummonerCtrl', function($scope, $http, StatCompareServic
    $scope.regions = ['NA', 'EUW', 'EUNE'];
    $scope.region = $scope.regions[0];
    $scope.showSummoner = false;
-   $scope.apikey = '???';
+   $scope.apikey = '19c807fc-2497-4816-af7a-7f394e57c3ae';//REMOVE KEY BEFORE COMMIT
 
    $scope.champions = [];
 
@@ -61,26 +61,51 @@ lolApp.controller('ComparisonCtrl', function($scope, StatCompareService){
    $scope.rightChampionName = StatCompareService;
    $scope.statTableRows = [];
 
+   //Remove stats of previously chosen champions when a new champion is selected
+   $scope.$watch('[leftChampionName,rightChampionName]', function(){$scope.statTableRows = [];}, true);
+
    $scope.compareStats = function(){
       console.log('faku');
 
       $scope.statTableRows = [];
       var tmpStatTableRows = [];
+      var leftIcon = {color: 'orange', icon: 'minus'}, 
+          rightIcon = {color: 'orange', icon: 'minus'};
+      var difference;
 
       for(var stat in StatCompareService.leftChampionData.stats){
 
+         difference = StatCompareService.leftChampionData.stats[stat] - StatCompareService.rightChampionData.stats[stat];
+
+         if(difference < 0){
+            leftIcon = {color: 'red', icon: 'arrow-down'};
+            rightIcon = {color: 'green', icon: 'arrow-up'};
+         } 
+         else if(difference > 0){
+            leftIcon = {color: 'green', icon: 'arrow-up'};
+            rightIcon = {color: 'red', icon: 'arrow-down'};
+         }
+
          tmpStatTableRows.push(
             {
-               leftStats: StatCompareService.leftChampionData.stats[stat],
+               left: {
+                  stats: StatCompareService.leftChampionData.stats[stat],
+                  color: leftIcon.color,
+                  icon: leftIcon.icon
+               },
                statName: stat,
-               rightStats: StatCompareService.rightChampionData.stats[stat]
+               right: {
+                  stats: StatCompareService.rightChampionData.stats[stat],
+                  color: rightIcon.color,
+                  icon: rightIcon.icon
+               }
             }
          );
 
       }
 
       $scope.statTableRows = tmpStatTableRows.filter(function(row){
-         return row.leftStats > 0 || row.rightStats > 0;
+         return row.left.stats > 0 || row.right.stats > 0;
       }).map(function(row){
          row.statName = fromCamelCase(row.statName);
          return row;
@@ -98,7 +123,7 @@ lolApp.directive('summonerForm', function(){
                   '<div class="col-xs-10">'+
                      '<input type="text" class="form-control margin-top-10" placeholder="Summoner Name" ng-model="summonerName">'+
                   '</div>'+
-                  '<div class="col-xs-4 margin-top-10">'+
+                  '<div class="col-xs-5 margin-top-10">'+
                      '<select class="form-control" ng-model="region" ng-options="r.toString() for r in regions">'+
                      '</select>'+
                   '</div>'+

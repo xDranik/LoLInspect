@@ -5,7 +5,7 @@
       <link rel="stylesheet" href="../external/css/bootstrap.css">
       <style type="text/css">
          .op-border{
-            /*border: 2px solid black*/
+            border: 2px solid black
          }
          .margin-top-10{
             margin-top: 10px;
@@ -75,11 +75,21 @@
                   <hr>
                   <p>Results:</p>
                   
-                  <table class="table">
+                  <table class="table table-bordered">
                      <tr ng-repeat="statRow in statTableRows">
-                        <td style="text-align:right">{{statRow.leftStats}}</td>
+
+                        <td style="text-align:right">
+                           {{statRow.left.stats}} 
+                           <span class="glyphicon glyphicon-{{statRow.left.icon}}" style="color: {{statRow.left.color}};"></span>
+                        </td>
+
                         <td style="text-align:center">{{statRow.statName}}</td>
-                        <td style="text-align:right">{{statRow.rightStats}}</td>
+
+                        <td style="text-align:right">
+                           {{statRow.right.stats}}
+                           <span class="glyphicon glyphicon-{{statRow.right.icon}}" style="color: {{statRow.right.color}};"></span>
+                        </td>
+
                      </tr>
                   </table>
 
