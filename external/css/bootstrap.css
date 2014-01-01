@@ -1124,6 +1124,10 @@ pre code {
   margin-left: 4.166666666666665%;
 }
 
+.col-xs-offset-fourth{/*added*/
+  margin-left: 2.083333333333332%;
+}
+
 .col-xs-offset-0 {
   margin-left: 0;
 }
