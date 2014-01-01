@@ -13,6 +13,9 @@
          .margin-top-100{
             margin-top: 100px;
          }
+         h4:hover{
+            cursor: pointer;
+         }
       </style>
    </head>
 
@@ -50,7 +53,7 @@
          <div class="row">
             
             <!-- Code for left side summoner and champion selection -->
-            <div class="op-border col-md-3" ng-controller="LeftSummonerCtrl">
+            <div class="col-md-3 col-xs-offset-fourth" ng-controller="LeftSummonerCtrl">
 
                <summoner-form></summoner-form>
 
@@ -59,19 +62,20 @@
             </div>
 
 
-            <!-- Code for center statistics comparison -->
-            <div class="op-border col-md-5 col-xs-offset-half" ng-controller="ComparisonCtrl">
-               
-               <h3 ng-bind="leftChampionName.leftChampionData.name"></h3>
-               <h3 style="text-align:center">vs.</h3>
-               <h3 ng-bind="rightChampionName.rightChampionData.name" style="text-align:right"></h3>
 
-               <button type="button" class="btn btn-danger" ng-show="leftChampionName.leftChampionData.name != '?' && rightChampionName.rightChampionData.name != '?'" style="margin-left: 33%" ng-click="compareStats()">
+            <!-- Code for center statistics comparison -->
+            <div class="op-border col-md-5 col-xs-offset-fourth" ng-controller="ComparisonCtrl" style="text-align:center">
+               
+               <h3 ng-bind="championData.leftChampionData.displayName" style="text-align:center"></h3>
+               <h3 style="text-align:center">vs.</h3>
+               <h3 ng-bind="championData.rightChampionData.displayName" style="text-align:center"></h3>
+
+               <!-- Only shows button when two champions are selected -->
+               <button type="button" class="btn btn-danger" ng-show="championData.leftChampionData.displayName != '?' && championData.rightChampionData.displayName != '?'" ng-click="compareStats()">
                   Compare Stats!
                </button>
 
                <div ng-show="statTableRows.length > 0">
-               <!-- <div> -->
                   <hr>
                   <p>Results:</p>
                   
@@ -97,8 +101,10 @@
 
             </div>
 
+
+
             <!-- Code for right side summoner and champion selection -->
-            <div class="op-border col-md-3 col-xs-offset-half" ng-controller="RightSummonerCtrl">
+            <div class="col-md-3 col-xs-offset-fourth" ng-controller="RightSummonerCtrl">
 
                <summoner-form></summoner-form>
 

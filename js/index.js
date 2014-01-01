@@ -1,80 +1,101 @@
 var lolApp = angular.module('lolApp', []);
 
+/*
+   The StatCompareService factory will be used to share data
+   between the Left/Right Summoner controllers and the
+   stat comparison controller.
+*/
 lolApp.factory('StatCompareService', function(){
-
    return {
-      leftChampionData: {name: '?'},
-      rightChampionData: {name: '?'},
+      leftChampionData: {displayName: '?'},
+      rightChampionData: {displayName: '?'},
       comparisonData: undefined
    }
-
 });
 
+//Controller responsible for the left column on the page
 lolApp.controller('LeftSummonerCtrl', function($scope, $http, StatCompareService){
 
    $scope.regions = ['NA', 'EUW', 'EUNE'];
    $scope.region = $scope.regions[0];
    $scope.showSummoner = false;
 
+   //List of champions a specific summoner has played during 2013 ranked
    $scope.champions = [];
 
 
    $scope.querySummoner = function(){
-      getSummonerIDFromName($scope, $http);
+      //Reset display name b/c a new (or same) summoner name is being searched
+      StatCompareService.leftChampionData = {displayName: '?'};
+
+      getSummonerIDFromName($scope, $http);//Create a service instead of using below functions
    }
 
+   //Provides updated data to the Comparison Controller in order to compare stats
    $scope.updateStatCompareData = function(champion){
+      //Include summoner name with champion name to eliminate confusion
+      champion.displayName = champion.name + ' (' + $scope.summonerName + ')';
+
       StatCompareService.leftChampionData = champion;
       console.log(StatCompareService);
    }
 
-   $scope.test = StatCompareService.leftChampionData.name;
-
 });
 
-
+//Controller responsible for the right column on the page
 lolApp.controller('RightSummonerCtrl', function($scope, $http, StatCompareService){
 
    $scope.regions = ['NA', 'EUW', 'EUNE'];
    $scope.region = $scope.regions[0];
    $scope.showSummoner = false;
 
+   //List of champions a specific summoner has played during 2013 ranked
    $scope.champions = [];
 
    $scope.querySummoner = function(){
-      getSummonerIDFromName($scope, $http);
+      //Reset display name b/c a new (or same) summoner name is being searched
+      StatCompareService.rightChampionData = {displayName: '?'};
+
+      getSummonerIDFromName($scope, $http);//Create a service instead of using below functions
    }
 
-
+   //Provides updated data to the Comparison Controller in order to compare stats
    $scope.updateStatCompareData = function(champion){
+      //Include summoner name with champion name to eliminate confusion
+      champion.displayName = champion.name + ' (' + $scope.summonerName + ')';
+
       StatCompareService.rightChampionData = champion;
       console.log(StatCompareService);
    }
 
 });
 
+//Controller responsible for stat comparison related tasks
 lolApp.controller('ComparisonCtrl', function($scope, StatCompareService){
 
-   $scope.leftChampionName = StatCompareService;
-   $scope.rightChampionName = StatCompareService;
+   $scope.championData = StatCompareService;
    $scope.statTableRows = [];
 
    //Remove stats of previously chosen champions when a new champion is selected
-   $scope.$watch('[leftChampionName,rightChampionName]', function(){$scope.statTableRows = [];}, true);
+   $scope.$watch('championData', function(){
+      $scope.statTableRows = [];
+   }, true);
 
    $scope.compareStats = function(){
-      console.log('faku');
 
       $scope.statTableRows = [];
       var tmpStatTableRows = [];
+
       var leftIcon = {color: 'orange', icon: 'minus'}, 
           rightIcon = {color: 'orange', icon: 'minus'};
       var difference;
 
       for(var stat in StatCompareService.leftChampionData.stats){
 
-         difference = StatCompareService.leftChampionData.stats[stat] - StatCompareService.rightChampionData.stats[stat];
+         difference = StatCompareService.leftChampionData.stats[stat] - 
+                      StatCompareService.rightChampionData.stats[stat];
 
+         //Change icon object depending on stat difference
          if(difference < 0){
             leftIcon = {color: 'red', icon: 'arrow-down'};
             rightIcon = {color: 'green', icon: 'arrow-up'};
@@ -102,9 +123,12 @@ lolApp.controller('ComparisonCtrl', function($scope, StatCompareService){
 
       }
 
+      //Filter out stats that are 0 for both of the selected champions
       $scope.statTableRows = tmpStatTableRows.filter(function(row){
          return row.left.stats > 0 || row.right.stats > 0;
-      }).map(function(row){
+      })
+      //Change camel cased stat names to space seperated
+      .map(function(row){
          row.statName = fromCamelCase(row.statName);
          return row;
       });
@@ -118,14 +142,17 @@ lolApp.directive('summonerForm', function(){
    return {
       restrict: 'E',
       template:'<form role="form" ng-submit=querySummoner()>'+
-                  '<div class="col-xs-10">'+
-                     '<input type="text" class="form-control margin-top-10" placeholder="Summoner Name" ng-model="summonerName">'+
+                  '<div class="col-xs-12">'+
+                     '<p>Summoner Search</p>'+
+                     '<input type="text" class="form-control" placeholder="Summoner Name" ng-model="summonerName">'+
                   '</div>'+
                   '<div class="col-xs-5 margin-top-10">'+
                      '<select class="form-control" ng-model="region" ng-options="r.toString() for r in regions">'+
                      '</select>'+
                   '</div>'+
-                  '<button type="submit" class="btn btn-primary margin-top-10">Search Summoner</button>'+
+                  '<button type="submit" class="btn btn-primary margin-top-10">'+
+                     '<span class="glyphicon glyphicon-search"></span> Search'+
+                  '</button>'+
                '</form>'
    }
 })
@@ -135,8 +162,10 @@ lolApp.directive('championList', function(){
       restrict: 'E',
       template:'<div ng-show="showSummoner">'+
                   '<hr>Select a Champion:'+
-                  '<div ng-repeat="champion in champions|orderBy:\'name\'">'+
-                     '<h4 ng-click="updateStatCompareData(champion)">{{champion.name}}</h4>'+//don't need {{}}???
+                  '<div>'+
+                     '<h4 ng-repeat="champion in champions|orderBy:\'name\'" '+
+                        'ng-click="updateStatCompareData(champion)">{{champion.name}}'+
+                     '</h4>'+
                   '</div>'+
                '</div>'
    }
@@ -150,7 +179,6 @@ function getSummonerIDFromName($scope, $http){
    var summonerName = $scope.summonerName || '';
 
    if(summonerName.length < 3 || summonerName.length > 16){
-      //don't query, show no matches?
       $scope.showSummoner = false;
       return;
    }
@@ -191,7 +219,7 @@ function getSummonerRankedStats($scope, $http, summonerID){
    })
    .error(function(data, status, headers, config){
       $scope.showSummoner = false;
-      console.log('faku in get ranked stats');
+      console.log('Unable to retrieve ranked stats');
    });
 }
 
