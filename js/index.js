@@ -15,7 +15,6 @@ lolApp.controller('LeftSummonerCtrl', function($scope, $http, StatCompareService
    $scope.regions = ['NA', 'EUW', 'EUNE'];
    $scope.region = $scope.regions[0];
    $scope.showSummoner = false;
-   $scope.apikey = '19c807fc-2497-4816-af7a-7f394e57c3ae';//REMOVE KEY BEFORE COMMIT
 
    $scope.champions = [];
 
@@ -39,7 +38,6 @@ lolApp.controller('RightSummonerCtrl', function($scope, $http, StatCompareServic
    $scope.regions = ['NA', 'EUW', 'EUNE'];
    $scope.region = $scope.regions[0];
    $scope.showSummoner = false;
-   $scope.apikey = '19c807fc-2497-4816-af7a-7f394e57c3ae';//REMOVE KEY BEFORE COMMIT
 
    $scope.champions = [];
 
@@ -160,7 +158,7 @@ function getSummonerIDFromName($scope, $http){
    $http({
       method: 'GET', 
       url: 'http://prod.api.pvp.net/api/lol/'+region+'/v1.2/summoner/by-name/'+
-            summonerName+'?api_key='+$scope.apikey
+            summonerName+'?api_key='+apikey
    })
    .success(function(data, status, headers, config){
 
@@ -184,7 +182,7 @@ function getSummonerRankedStats($scope, $http, summonerID){
    $http({
       method: 'GET',
       url: 'http://prod.api.pvp.net/api/lol/'+region+'/v1.2/stats/by-summoner/' +
-      summonerID+'/ranked?season=SEASON3&api_key='+$scope.apikey
+      summonerID+'/ranked?season=SEASON3&api_key='+apikey
    })
    .success(function(data, status, headers, config){
       $scope.champions = data.champions;
@@ -195,7 +193,6 @@ function getSummonerRankedStats($scope, $http, summonerID){
       $scope.showSummoner = false;
       console.log('faku in get ranked stats');
    });
-
 }
 
 function fromCamelCase(string){
@@ -203,7 +200,6 @@ function fromCamelCase(string){
    return string[0].toUpperCase() + 
       string.substring(1, string.length)
          .replace(/[A-Z]/g, function(match){return ' ' + match.toLowerCase();})
-
 }
 
 
