@@ -5,7 +5,10 @@
       <link rel="stylesheet" href="../external/css/bootstrap.css">
       <style type="text/css">
          .op-border{
-            border: 2px solid black
+            /*border: 2px solid black;*/
+            /*border-radius: 15px;*/
+            /*background-color: #eeeeee;*/
+            height: 190px;
          }
          .margin-top-10{
             margin-top: 10px;
@@ -13,7 +16,7 @@
          .margin-top-100{
             margin-top: 100px;
          }
-         h4:hover{
+         .cursor-pointer:hover{
             cursor: pointer;
          }
       </style>
@@ -53,7 +56,7 @@
          <div class="row">
             
             <!-- Code for left side summoner and champion selection -->
-            <div class="col-md-3 col-xs-offset-fourth" ng-controller="LeftSummonerCtrl">
+            <div class="op-border col-md-3 col-xs-offset-fourth" ng-controller="LeftSummonerCtrl">
 
                <summoner-form></summoner-form>
 
@@ -71,7 +74,7 @@
                <h3 ng-bind="championData.rightChampionData.displayName" style="text-align:center"></h3>
 
                <!-- Only shows button when two champions are selected -->
-               <button type="button" class="btn btn-danger" ng-show="championData.leftChampionData.displayName != '?' && championData.rightChampionData.displayName != '?'" ng-click="compareStats()">
+               <button type="button" class="btn btn-danger" ng-click="compareStats()">
                   Compare Stats!
                </button>
 
@@ -99,12 +102,12 @@
 
                </div>
 
-            </div>
+            </div><!-- CompareCtrl -->
 
 
 
             <!-- Code for right side summoner and champion selection -->
-            <div class="col-md-3 col-xs-offset-fourth" ng-controller="RightSummonerCtrl">
+            <div class="op-border col-md-3 col-xs-offset-fourth" ng-controller="RightSummonerCtrl">
 
                <summoner-form></summoner-form>
 
@@ -112,8 +115,8 @@
 
             </div>
 
-         </div>
-      </div>
+         </div><!-- row -->
+      </div><!-- container -->
 
       <script src="../external/js/angular.js"></script>
       <script src="../external/js/underscore.js"></script>

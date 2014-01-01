@@ -33,11 +33,15 @@ lolApp.controller('LeftSummonerCtrl', function($scope, $http, StatCompareService
 
    //Provides updated data to the Comparison Controller in order to compare stats
    $scope.updateStatCompareData = function(champion){
+      $scope.championFilter = champion.name;
+
       //Include summoner name with champion name to eliminate confusion
       champion.displayName = champion.name + ' (' + $scope.summonerName + ')';
 
       StatCompareService.leftChampionData = champion;
       console.log(StatCompareService);
+
+      $scope.showChampionList = false;
    }
 
 });
@@ -61,11 +65,15 @@ lolApp.controller('RightSummonerCtrl', function($scope, $http, StatCompareServic
 
    //Provides updated data to the Comparison Controller in order to compare stats
    $scope.updateStatCompareData = function(champion){
+      $scope.championFilter = champion.name;
+
       //Include summoner name with champion name to eliminate confusion
       champion.displayName = champion.name + ' (' + $scope.summonerName + ')';
 
       StatCompareService.rightChampionData = champion;
       console.log(StatCompareService);
+
+      $scope.showChampionList = false;
    }
 
 });
@@ -82,6 +90,12 @@ lolApp.controller('ComparisonCtrl', function($scope, StatCompareService){
    }, true);
 
    $scope.compareStats = function(){
+
+      if($scope.championData.leftChampionData.displayName == '?' || 
+         $scope.championData.rightChampionData.displayName == '?'){
+         //Display error message?
+         return;
+      }
 
       $scope.statTableRows = [];
       var tmpStatTableRows = [];
@@ -134,8 +148,7 @@ lolApp.controller('ComparisonCtrl', function($scope, StatCompareService){
       });
 
       console.log($scope.statTableRows);
-   }
-
+   };
 });
 
 lolApp.directive('summonerForm', function(){
@@ -143,7 +156,7 @@ lolApp.directive('summonerForm', function(){
       restrict: 'E',
       template:'<form role="form" ng-submit=querySummoner()>'+
                   '<div class="col-xs-12">'+
-                     '<p>Summoner Search</p>'+
+                     '<h3>Summoner Search</h3>'+
                      '<input type="text" class="form-control" placeholder="Summoner Name" ng-model="summonerName">'+
                   '</div>'+
                   '<div class="col-xs-5 margin-top-10">'+
@@ -155,23 +168,31 @@ lolApp.directive('summonerForm', function(){
                   '</button>'+
                '</form>'
    }
-})
+});
 
 lolApp.directive('championList', function(){
    return {
       restrict: 'E',
-      template:'<div ng-show="showSummoner">'+
-                  '<hr>Select a Champion:'+
-                  '<div>'+
-                     '<h4 ng-repeat="champion in champions|orderBy:\'name\'" '+
-                        'ng-click="updateStatCompareData(champion)">{{champion.name}}'+
-                     '</h4>'+
-                  '</div>'+
+      template:'<div class="col-xs-12" ng-show="showSummoner">'+
+                  '<hr><p>Select a Champion:</p>'+
+                  '<input type="text" class="form-control" placeholder="Champion search" '+
+                     'ng-model="championFilter" ng-focus="showChampionList=true;">'+
+                  '<table class="table table-bordered" ng-show="showChampionList">'+
+                     '<tr ng-repeat="champion in champions|filter:championFilter|orderBy:\'name\'|slice:0:10:championFilter" '+
+                        'ng-click="updateStatCompareData(champion)">'+
+                        '<td class="cursor-pointer">{{champion.name}}</td>'+
+                     '</tr>'+
+                  '</table>'+
                '</div>'
-   }
-})
+   };
+});
 
-
+lolApp.filter('slice', function() {
+  return function(arr, start, end, championFilter) {
+   championFilter = championFilter || '';
+   return championFilter == '' ? [] : arr.slice(start, end);
+  };
+});
 
 
 function getSummonerIDFromName($scope, $http){
@@ -194,7 +215,7 @@ function getSummonerIDFromName($scope, $http){
       getSummonerRankedStats($scope, $http, data.id)
 
    })
-   .error(function(data, status, headers, config){
+   .error(function(data, status, headers, config){//DISPLAY ERROR MESSAGE?
       
       $scope.showSummoner = false;
       console.log('Error on GET to /api/lol/'+ $scope.region +
@@ -217,7 +238,7 @@ function getSummonerRankedStats($scope, $http, summonerID){
       $scope.showSummoner = true;
       console.log(data);
    })
-   .error(function(data, status, headers, config){
+   .error(function(data, status, headers, config){//DISPLAY ERROR MESSAGE?
       $scope.showSummoner = false;
       console.log('Unable to retrieve ranked stats');
    });
