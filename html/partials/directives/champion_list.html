@@ -1,0 +1,11 @@
+<div class="col-xs-12" ng-show="showSummoner">
+   <hr><p>Select a Champion:</p>
+   <input type="text" class="form-control" placeholder="Champion search" 
+      ng-model="championFilter" ng-focus="showChampionList=true;">
+   <table class="table table-bordered" ng-show="showChampionList">
+      <tr ng-repeat="champion in champions|filter:championFilter|orderBy:'name'|slice:0:10:championFilter" 
+         ng-click="updateStatCompareData(champion)">
+         <td class="cursor-pointer">{{champion.name}}</td>
+      </tr>
+   </table>
+</div>
