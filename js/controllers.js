@@ -1,13 +1,13 @@
 var app = angular.module('app.controllers', [])
 
 //Controller responsible for the left column on the page
-app.controller('LeftSummonerCtrl', function($scope, $http, StatCompareService){
+app.controller('LeftSummonerCtrl', function($scope, $http, StatCompareService, RiotApiService){
 
    $scope.regions = ['NA', 'EUW', 'EUNE'];
    $scope.region = $scope.regions[0];
    $scope.showSummoner = false;
 
-   //List of champions a specific summoner has played during 2013 ranked
+   //List of champions a specific summoner has played during season 3 ranked
    $scope.champions = [];
 
 
@@ -15,7 +15,7 @@ app.controller('LeftSummonerCtrl', function($scope, $http, StatCompareService){
       //Reset display name b/c a new (or same) summoner name is being searched
       StatCompareService.leftChampionData = {displayName: '?'};
 
-      getSummonerIDFromName($scope, $http);//Create a service instead of using below functions
+      RiotApiService.getSummonerIdFromName($scope, $http);
    }
 
    //Provides updated data to the Comparison Controller in order to compare stats
@@ -34,20 +34,20 @@ app.controller('LeftSummonerCtrl', function($scope, $http, StatCompareService){
 });
 
 //Controller responsible for the right column on the page
-app.controller('RightSummonerCtrl', function($scope, $http, StatCompareService){
+app.controller('RightSummonerCtrl', function($scope, $http, StatCompareService, RiotApiService){
 
    $scope.regions = ['NA', 'EUW', 'EUNE'];
    $scope.region = $scope.regions[0];
    $scope.showSummoner = false;
 
-   //List of champions a specific summoner has played during 2013 ranked
+   //List of champions a specific summoner has played during season 3 ranked
    $scope.champions = [];
 
    $scope.querySummoner = function(){
       //Reset display name b/c a new (or same) summoner name is being searched
       StatCompareService.rightChampionData = {displayName: '?'};
 
-      getSummonerIDFromName($scope, $http);//Create a service instead of using below functions
+      RiotApiService.getSummonerIdFromName($scope, $http);
    }
 
    //Provides updated data to the Comparison Controller in order to compare stats
@@ -80,7 +80,7 @@ app.controller('ComparisonCtrl', function($scope, StatCompareService){
 
       if($scope.championData.leftChampionData.displayName == '?' || 
          $scope.championData.rightChampionData.displayName == '?'){
-         //Display error message?
+         //At least one champion hasn't been selected. Display error message?
          return;
       }
 
@@ -106,21 +106,19 @@ app.controller('ComparisonCtrl', function($scope, StatCompareService){
             rightIcon = {color: 'red', icon: 'arrow-down'};
          }
 
-         tmpStatTableRows.push(
-            {
-               left: {
-                  stats: StatCompareService.leftChampionData.stats[stat],
-                  color: leftIcon.color,
-                  icon: leftIcon.icon
-               },
-               statName: stat,
-               right: {
-                  stats: StatCompareService.rightChampionData.stats[stat],
-                  color: rightIcon.color,
-                  icon: rightIcon.icon
-               }
+         tmpStatTableRows.push({
+            left: {
+               stats: StatCompareService.leftChampionData.stats[stat],
+               color: leftIcon.color,
+               icon: leftIcon.icon
+            },
+            statName: stat,
+            right: {
+               stats: StatCompareService.rightChampionData.stats[stat],
+               color: rightIcon.color,
+               icon: rightIcon.icon
             }
-         );
+         });
 
       }
 
@@ -138,62 +136,7 @@ app.controller('ComparisonCtrl', function($scope, StatCompareService){
    };
 });
 
-
-//PUT ME IN A SERVICE
-function getSummonerIDFromName($scope, $http){
-   var region = $scope.region.toLowerCase();
-   var summonerName = $scope.summonerName || '';
-
-   if(summonerName.length < 3 || summonerName.length > 16){
-      $scope.showSummoner = false;
-      return;
-   }
-
-   $http({
-      method: 'GET', 
-      url: 'http://prod.api.pvp.net/api/lol/'+region+'/v1.2/summoner/by-name/'+
-            summonerName+'?api_key='+apikey
-   })
-   .success(function(data, status, headers, config){
-
-      console.log(data);
-      getSummonerRankedStats($scope, $http, data.id)
-
-   })
-   .error(function(data, status, headers, config){//DISPLAY ERROR MESSAGE?
-      
-      $scope.showSummoner = false;
-      console.log('Error on GET to /api/lol/'+ $scope.region +
-         'v1.2/summoner/by-name/' + summonerName);
-      console.log('HTTP status code: ' + status);
-
-   });
-}
-
-//PUT ME IN A SERVICE
-function getSummonerRankedStats($scope, $http, summonerID){
-
-   var region = $scope.region.toLowerCase();
-   $http({
-      method: 'GET',
-      url: 'http://prod.api.pvp.net/api/lol/'+region+'/v1.2/stats/by-summoner/' +
-      summonerID+'/ranked?season=SEASON3&api_key='+apikey
-   })
-   .success(function(data, status, headers, config){
-      $scope.champions = data.champions;
-      $scope.showSummoner = true;
-      console.log(data);
-   })
-   .error(function(data, status, headers, config){//DISPLAY ERROR MESSAGE?
-      $scope.showSummoner = false;
-      console.log('Unable to retrieve ranked stats');
-   });
-}
-
-
-
 function fromCamelCase(string){
-
    return string[0].toUpperCase() + 
       string.substring(1, string.length)
          .replace(/[A-Z]/g, function(match){return ' ' + match.toLowerCase();})
