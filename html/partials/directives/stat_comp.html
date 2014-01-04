@@ -1,0 +1,31 @@
+<h3 ng-bind="championData.leftChampionData.displayName" style="text-align:center"></h3>
+<h3 style="text-align:center">vs.</h3>
+<h3 ng-bind="championData.rightChampionData.displayName" style="text-align:center"></h3>
+
+<button type="button" class="btn btn-danger" ng-click="compareStats()">
+   Compare Stats!
+</button>
+
+<div ng-show="statTableRows.length > 0">
+   <hr>
+   <p>Results:</p>
+   
+   <table class="table table-bordered">
+      <tr ng-repeat="statRow in statTableRows">
+
+         <td style="text-align:right">
+            {{statRow.left.stats}} 
+            <span class="glyphicon glyphicon-{{statRow.left.icon}}" style="color: {{statRow.left.color}};"></span>
+         </td>
+
+         <td style="text-align:center">{{statRow.statName}}</td>
+
+         <td style="text-align:right">
+            {{statRow.right.stats}}
+            <span class="glyphicon glyphicon-{{statRow.right.icon}}" style="color: {{statRow.right.color}};"></span>
+         </td>
+
+      </tr>
+   </table>
+
+</div>
