@@ -28,8 +28,8 @@
          </div>
       </nav>
 
-      <div class="content-max-width">
-         <div class="margin-top-100 jumbotron">
+      <div class="content-max-width margin-center">
+         <div class="margin-top-100 round-div jumbotron">
             <h1>Ranked Stat Comparison</h1>
             <p>Hi, my name is paragraph</p>
          </div>
@@ -43,10 +43,10 @@
       <div id="container">
 
          <!-- <div class="row"> -->
-         <div id="main-content" class="content-max-width">
+         <div id="main-content" class="content-max-width margin-center">
             
             <!-- Code for left side summoner and champion selection -->
-            <div class="summoner-search inline-b marg-left-15" ng-controller="LeftSummonerCtrl">
+            <div ng-controller="LeftSummonerSearchCtrl" class="inline-b div-bg-color summoner-search-container round-div">
 
                <summoner-form></summoner-form>
 
@@ -55,22 +55,17 @@
             </div>
 
 
+            <div ng-controller="MainCtrl" class="inline-b margin-left-15 div-bg-color round-div">
 
-            <!-- Code for center statistics comparison -->
-<!--             <div class="op-border col-md-5 col-xs-offset-fourth" ng-controller="ComparisonCtrl" style="text-align:center">
-               
-               <stat-comparison></stat-comparison>
+                  <champion-list></champion-list> 
 
-            </div> -->
-            <div ng-controller="TmpCtrl" class="inline-b marg-left-15">
-               <champion-list></champion-list>
             </div>
 
 
 
 
             <!-- Code for right side summoner and champion selection -->
-            <div class="summoner-search inline-b margin-left-55" ng-controller="RightSummonerCtrl">
+            <div ng-controller="RightSummonerSearchCtrl" class="inline-b margin-left-15 div-bg-color summoner-search-container round-div">
 
                <summoner-form></summoner-form>
 
@@ -82,6 +77,7 @@
 
          </div><!-- main content -->
       </div><!-- container -->
+
 
       <script src="../external/js/underscore.js"></script>
       <script src="../external/js/jquery-1.10.2.js"></script>

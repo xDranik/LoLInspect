@@ -1,13 +1,13 @@
-<form role="form" ng-submit=querySummoner()>
-   <div class="col-xs-10">
+<div class="summoner-search-container margin-bot-30">
+   <form role="form" ng-submit="querySummoner()">
+      <!-- <div class="col-xs-10"> -->
       <h3>Summoner</h3>
-      <input type="text" class="form-control" placeholder="Summoner Name" ng-model="summonerName">
-   </div>
-   <div class="col-xs-5 margin-top-10" style="display:inline-block">
-      <select class="form-control" ng-model="region" ng-options="r.toString() for r in regions">
+      <input type="text" class="form-control summoner-search margin-center" placeholder="Summoner Name" ng-model="summonerName">
+
+      <select class="form-control margin-top-10" ng-model="region" ng-options="r.toString() for r in regions" style="width:75px;display:inline-block">
       </select>
-   </div>
-   <button type="submit" class="btn btn-primary margin-top-10">
-      <span class="glyphicon glyphicon-search"></span> Search
-   </button>
-</form>
+      <button type="submit" class="btn btn-primary margin-top-10">
+         <span class="glyphicon glyphicon-search"></span> Search
+      </button>
+   </form>
+</div>
