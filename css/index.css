@@ -3,15 +3,6 @@ body{
    background-color: #0b0b0b;
 }
 
-.margin-top-10{
-   margin-top: 10px;
-}
-
-.margin-top-100{
-   margin-top: 100px;
-}
-
-
 
 .champ-div{
    height: 60px;
@@ -28,29 +19,83 @@ body{
    background-color: #FFCC00;
 }
 
-#champListContainer{
-   width: 600px;
+#champ-list-container{
+   width: 615px;
+   height: 250px;
+   overflow-y: auto;/*??*/
+}
+
+.summoner-search-container{
+   width: 250px;
+   vertical-align: top;
 }
 
 .summoner-search{
-   width: 250px;
-   margin: 0 auto;
-   vertical-align: top;
+   width: 165px;
+}
+
+.summoner-search-container > form{
+   text-align: center;
+}
+
+
+#champ-list-assists{
+   height: 50px;
+   width: 50px;
+}
+
+#stat-comp-container{
+   width: 660px;
 }
 
 .inline-b{
    display: inline-block;
 }
 
-.marg-left-15{
+.content-max-width{
+   width: 1200px; 
+}
+
+.margin-center{
+   margin: 0 auto;
+}
+
+/*Margin tops*/
+.margin-top-10{
+   margin-top: 10px;
+}
+
+.margin-top-20{
+   margin-top: 25px;
+}
+
+.margin-top-100{
+   margin-top: 100px;
+}
+
+
+/*Margin lefts*/
+.margin-left-15{
    margin-left: 15px;
 }
 
-.margin-left-55{
-   margin-left: 55px;
+.margin-left-30{
+   margin-left: 30px;
 }
 
-.content-max-width{
-   width: 1200px; 
-   margin: 0 auto; 
+/*Margin bottoms*/
+.margin-bot-30{
+   margin-bottom: 30px;
 }
+
+.round-div{
+   border-radius: 5px;
+}
+
+.div-bg-color{
+   background-color: #222222;
+}
+
+/*h3{
+   margin-left: 10px;
+}*/
