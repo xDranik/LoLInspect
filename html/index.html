@@ -3,23 +3,8 @@
 
    <head>
       <link rel="stylesheet" href="../external/css/bootstrap.css">
-      <style type="text/css">
-         .op-border{
-            /*border: 2px solid black;*/
-            /*border-radius: 15px;*/
-            /*background-color: #eeeeee;*/
-            height: 190px;
-         }
-         .margin-top-10{
-            margin-top: 10px;
-         }
-         .margin-top-100{
-            margin-top: 100px;
-         }
-         .cursor-pointer:hover{
-            cursor: pointer;
-         }
-      </style>
+      <link rel="stylesheet" href="../css/index.css">
+
    </head>
 
    <body ng-app="app">
@@ -43,82 +28,64 @@
          </div>
       </nav>
 
-      <div class="container margin-top-100">
-         <div class="jumbotron">
+      <div class="content-max-width">
+         <div class="margin-top-100 jumbotron">
             <h1>Ranked Stat Comparison</h1>
             <p>Hi, my name is paragraph</p>
          </div>
       </div>
 
 
-      <div class="container">
 
-         <div class="row">
+
+
+
+      <div id="container">
+
+         <!-- <div class="row"> -->
+         <div id="main-content" class="content-max-width">
             
             <!-- Code for left side summoner and champion selection -->
-            <div class="op-border col-md-3 col-xs-offset-fourth" ng-controller="LeftSummonerCtrl">
+            <div class="summoner-search inline-b marg-left-15" ng-controller="LeftSummonerCtrl">
 
                <summoner-form></summoner-form>
 
-               <champion-list></champion-list>
+               <!-- <champion-list></champion-list> -->
 
             </div>
 
 
 
             <!-- Code for center statistics comparison -->
-            <div class="op-border col-md-5 col-xs-offset-fourth" ng-controller="ComparisonCtrl" style="text-align:center">
+<!--             <div class="op-border col-md-5 col-xs-offset-fourth" ng-controller="ComparisonCtrl" style="text-align:center">
                
-               <h3 ng-bind="championData.leftChampionData.displayName" style="text-align:center"></h3>
-               <h3 style="text-align:center">vs.</h3>
-               <h3 ng-bind="championData.rightChampionData.displayName" style="text-align:center"></h3>
+               <stat-comparison></stat-comparison>
 
-               <!-- Only shows button when two champions are selected -->
-               <button type="button" class="btn btn-danger" ng-click="compareStats()">
-                  Compare Stats!
-               </button>
+            </div> -->
+            <div ng-controller="TmpCtrl" class="inline-b marg-left-15">
+               <champion-list></champion-list>
+            </div>
 
-               <div ng-show="statTableRows.length > 0">
-                  <hr>
-                  <p>Results:</p>
-                  
-                  <table class="table table-bordered">
-                     <tr ng-repeat="statRow in statTableRows">
-
-                        <td style="text-align:right">
-                           {{statRow.left.stats}} 
-                           <span class="glyphicon glyphicon-{{statRow.left.icon}}" style="color: {{statRow.left.color}};"></span>
-                        </td>
-
-                        <td style="text-align:center">{{statRow.statName}}</td>
-
-                        <td style="text-align:right">
-                           {{statRow.right.stats}}
-                           <span class="glyphicon glyphicon-{{statRow.right.icon}}" style="color: {{statRow.right.color}};"></span>
-                        </td>
-
-                     </tr>
-                  </table>
-
-               </div>
-
-            </div><!-- CompareCtrl -->
 
 
 
             <!-- Code for right side summoner and champion selection -->
-            <div class="op-border col-md-3 col-xs-offset-fourth" ng-controller="RightSummonerCtrl">
+            <div class="summoner-search inline-b margin-left-55" ng-controller="RightSummonerCtrl">
 
                <summoner-form></summoner-form>
 
-               <champion-list></champion-list>
+               <!-- <champion-list></champion-list> -->
 
             </div>
 
-         </div><!-- row -->
+
+
+         </div><!-- main content -->
       </div><!-- container -->
 
       <script src="../external/js/underscore.js"></script>
+      <script src="../external/js/jquery-1.10.2.js"></script>
+      <script src="../external/js/bootstrap.js"></script>
 
       <!-- API key location -->
       <script src="../js/ihazkey.js"></script>
