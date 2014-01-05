@@ -1,8 +1,8 @@
-<div class="summoner-search-container margin-bot-30">
-   <form role="form" ng-submit="querySummoner()">
+<div class="summoner-search-container">
+   <form role="form" ng-submit="querySummoner()" style="margin-bottom:-30px">
       <!-- <div class="col-xs-10"> -->
       <h3>Summoner</h3>
-      <input type="text" class="form-control summoner-search margin-center" placeholder="Summoner Name" ng-model="summonerName">
+      <input type="text" class="form-control width-165 margin-center" placeholder="Summoner Name" ng-model="summonerName">
 
       <select class="form-control margin-top-10" ng-model="region" ng-options="r.toString() for r in regions" style="width:75px;display:inline-block">
       </select>
@@ -10,4 +10,15 @@
          <span class="glyphicon glyphicon-search"></span> Search
       </button>
    </form>
+
+   <br><br><br>
+
+   <div ng-show="true" class="alert alert-success margin-center width-165 margin-bot-30">
+      <p style="font-size:13px">Search Successful <span class="glyphicon glyphicon-ok-sign"></span> </p>
+   </div>
+
+   <div ng-show="true" class="alert alert-danger margin-center width-165 margin-bot-30">
+      <p style="font-size:13px">Incorrect Info <span class="glyphicon glyphicon-remove-sign"></span> </p>
+   </div>
+
 </div>

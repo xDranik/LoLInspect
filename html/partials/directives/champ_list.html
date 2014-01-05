@@ -2,17 +2,23 @@
 
    <div id="champ-list-assists" class="margin-center margin-top-10" style="width:615px;">
 
-      <input ng-model="championSearchName" type="text" class="form-control summoner-search margin-top-10" placeholder="Champion Name" style="float:right;">
+      <input ng-model="championSearchName" type="text" class="form-control width-165 margin-top-10" placeholder="Champion Name" style="float:right;">
 
    </div>
 
-   <div id="champ-list-container" class="margin-center blue-scroll">
+   <div id="champ-list-container" class="margin-center">
 
-      <div ng-click="selectChampion(name)" id="{{name}}" class="champ-div" ng-repeat="name in championNames|filter:championSearchName">
-         <img ng-src="../external/images/champions/{{name}}_Square_0.png" class="champ-icon" height="50px" width="50px">
+      <div ng-show="nameMatches(championSearchName,name)" ng-click="selectChampion(name)" id="{{name}}" class="champ-div" ng-repeat="name in championNames">
+
+         <img ng-src="../external/images/champions/{{name}}_Square_0.png" alt="{{name}} img" class="champ-icon" height="50px" width="50px">
+
          </img>
+         <div class="champ-name">{{fromCamelCase(name)}}</div>
+
       </div>
 
    </div>
 
 </div>
+
+<!-- |champFilter:spacedChampionNames:championSearchName -->
