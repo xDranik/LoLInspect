@@ -5,6 +5,8 @@ var app = angular.module('app.services', []);
    between the Left/Right Summoner controllers and the
    stat comparison controller.
 */
+
+//REMOVE?
 app.factory('StatCompareService', function(){
    return {
       leftChampionData: {displayName: '?'},
