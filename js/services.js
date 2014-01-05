@@ -8,6 +8,11 @@ var app = angular.module('app.services', []);
 app.factory('RiotApiService', function(){
    var riotApiService = {};
 
+   /*
+      Retrieves a summoners level and ID, given their summoner name.
+      The ID is used in riotApiService.getSummonerRankedStats to retrieve
+      a summoners champion data
+   */
    riotApiService.getSummonerInfoFromName = function($scope, $http){
 
       var region = $scope.region.toLowerCase();
@@ -29,6 +34,7 @@ app.factory('RiotApiService', function(){
 
          console.log(data);
 
+         //Level < 30 don't have ranked stats
          if(data.summonerLevel < 30){
             $scope.success.show = false;
 
@@ -60,14 +66,15 @@ app.factory('RiotApiService', function(){
       });
    };
 
+   /*
+      Retrieves a summoners champion data given their summonerID.
+   */
    riotApiService.getSummonerRankedStats = function($scope, $http, summonerID){
-
-      var region = $scope.region.toLowerCase();
 
       $http({
          method: 'GET',
-         url: 'http://prod.api.pvp.net/api/lol/'+region+'/v1.2/stats/by-summoner/' +
-         summonerID+'/ranked?season=SEASON3&api_key='+apikey
+         url: 'http://prod.api.pvp.net/api/lol/' + $scope.region.toLowerCase()
+            +'/v1.2/stats/by-summoner/' + summonerID + '/ranked?season=SEASON3&api_key=' + apikey
       })
       .success(function(data, status, headers, config){
 
@@ -80,7 +87,9 @@ app.factory('RiotApiService', function(){
       })
       .error(function(data, status, headers, config){
 
-         console.log('Unable to retrieve ranked stats');
+         console.log('Error on GET to /api/lol/'+ $scope.region.toLowerCase() +
+            'v1.2/summoner/by-name/' + summonerName);
+         console.log('HTTP status code: ' + status);
          //Do level 30 summoners error out if they haven't played ranked?
 
          $scope.success.show = false;
@@ -96,11 +105,11 @@ app.factory('RiotApiService', function(){
 });
 
 
-/*
-   leftsummonerdataservice and right so mainctrl and both summoners
-   can exchange selected summoenrs. also used when comparising stats
-*/
 
+/*
+   LeftSummonerDataService is used to share data between
+   LeftSummonerSearchCtrl and MainCtrl
+*/
 app.factory('LeftSummonerDataService', function(){
 
    return{
@@ -110,6 +119,10 @@ app.factory('LeftSummonerDataService', function(){
 
 });
 
+/*
+   RightSummonerDataService is used to share data between
+   RightSummonerSearchCtrl and MainCtrl
+*/
 app.factory('RightSummonerDataService', function(){
 
    return{
@@ -117,26 +130,4 @@ app.factory('RightSummonerDataService', function(){
       selectedChampions: []
    }
 
-});
-
-
-
-
-
-
-
-
-/*
-   The StatCompareService factory will be used to share data
-   between the Left/Right Summoner controllers and the
-   stat comparison controller.
-*/
-
-//REMOVE?
-app.factory('StatCompareService', function(){
-   return {
-      leftChampionData: {displayName: '?'},
-      rightChampionData: {displayName: '?'},
-      comparisonData: undefined
-   }
 });

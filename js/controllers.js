@@ -1,83 +1,117 @@
-var app = angular.module('app.controllers', [])
+var app = angular.module('app.controllers', []);
 
-//Controller responsible for the left column on the page
+/*
+   LeftSummonerSearchCtrl is responsible for the left columns...
+   - Summoner search form
+   - Summoner info display
+   - Success/Error messages (nodifications?)
+   - List of selected champions
+   ..and being super awesome
+*/
 app.controller('LeftSummonerSearchCtrl', function($scope, $http, RiotApiService, LeftSummonerDataService){
 
-   $scope.regions = ['NA', 'EUW', 'EUNE'];
-   $scope.region = $scope.regions[0];
-
-
-   //CHANGE SHOW BACK TO FALSE!
-   $scope.success = {show:false, message: 'Search Successfull'};
-   $scope.failure = {show:false, message: 'Incorrect Info'};
-
-   $scope.summonerColor = 'Blue';
-
-   $scope.summonerInfo = undefined;
-   $scope.summonerChampionData = undefined;
-
-   $scope.summonerData = LeftSummonerDataService;
-
-   $scope.showOrHideSelectedChampions = 'hide';
    $scope.toggleSelectedChampionList = function(){
+
+      //switch to opposite option
       $scope.showOrHideSelectedChampions = 
          $scope.showOrHideSelectedChampions == 'hide' ? 'show' : 'hide';
 
       $('#'+$scope.summonerColor+'-list').slideToggle();
    }
 
+   $scope.querySummoner = function(){
+      RiotApiService.getSummonerInfoFromName($scope, $http);
+   }
+
+   $scope.regions = ['NA', 'EUW', 'EUNE'];
+   $scope.region = $scope.regions[0];
+
+   $scope.success = {show:false, message: 'Search Successfull'};
+   $scope.failure = {show:false, message: 'Incorrect Info'};
+
+   $scope.summonerColor = 'Blue';
+
+   $scope.summonerData = LeftSummonerDataService;
+
+   $scope.showOrHideSelectedChampions = 'hide';
+
+});
+
+/*
+   RightSummonerSearchCtrl is responsible for the right columns...
+   - Summoner search form
+   - Summoner info display
+   - Success/Error messages (nodifications?)
+   - List of selected champions
+   ..and being super awesome
+*/
+app.controller('RightSummonerSearchCtrl', function($scope, $http, RiotApiService, RightSummonerDataService){
+
+   $scope.toggleSelectedChampionList = function(){
+
+      //switch to opposite option
+      $scope.showOrHideSelectedChampions = 
+         $scope.showOrHideSelectedChampions == 'hide' ? 'show' : 'hide';
+
+      $('#'+$scope.summonerColor+'-list').slideToggle();
+   }
 
    $scope.querySummoner = function(){
       RiotApiService.getSummonerInfoFromName($scope, $http);
    }
 
-});
-
-//Controller responsible for the right column on the page
-app.controller('RightSummonerSearchCtrl', function($scope, $http, RiotApiService, RightSummonerDataService){
-
    $scope.regions = ['NA', 'EUW', 'EUNE'];
    $scope.region = $scope.regions[0];
    $scope.showSummoner = false;
-
-   //List of champions a specific summoner has played during season 3 ranked
-   $scope.champions = [];
 
    $scope.success = {show:false, message: 'Search Successfull'};
    $scope.failure = {show:false, message: 'Incorrect Info'};
 
    $scope.summonerColor = 'Red';
 
-   $scope.summonerInfo = undefined;
-   $scope.summonerChampionData = undefined;
-
    $scope.summonerData = RightSummonerDataService;
 
-
    $scope.showOrHideSelectedChampions = 'hide';
-   $scope.toggleSelectedChampionList = function(){
-      $scope.showOrHideSelectedChampions = 
-         $scope.showOrHideSelectedChampions == 'hide' ? 'show' : 'hide';
-
-      $('#'+$scope.summonerColor+'-list').slideToggle();
-   }
-
-
-
-   $scope.querySummoner = function(){
-      RiotApiService.getSummonerInfoFromName($scope, $http);
-   }
-
 
 });
 
 
+/*
+   MainCtrl is responsible for the center columns...
+   - Champion list display
+   - Champion selections for both sides (blue and red)
+   - Sharing top secret information with LeftSummonerDataService and RightSummonerDataService (haha)
+*/
 app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummonerDataService){
 
    $scope.fromCamelCase = function(string){
       return string[0].toUpperCase() + 
          string.substring(1, string.length)
             .replace(/[A-Z]/g, function(match){return ' ' + match;})
+   }
+
+   $scope.selectChampion = function(champName){
+
+      var summonerData = ($scope.radioColor == 'Blue') ? $scope.leftSummonerData : $scope.rightSummonerData;
+      var nameIndex = summonerData.selectedChampions.indexOf(champName);
+
+      if(nameIndex == -1){
+         summonerData.selectedChampions.push(champName);
+      }
+      else{
+         summonerData.selectedChampions.splice(nameIndex, 1);
+      }
+
+      summonerData.selectedChampions = summonerData.selectedChampions.sort();
+
+      $('#'+champName).toggleClass('selected-'+$scope.radioColor);
+
+      console.log(summonerData.selectedChampions);
+   }
+
+   $scope.nameMatches = function(searchName, champName){
+      var regexp = new RegExp('^.*' + searchName + '.*$', 'i');
+      return champName.match(regexp)==null?false:true;
    }
 
    //get this info from Riot's api!
@@ -134,106 +168,4 @@ app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummon
 
    });
 
-
-   $scope.selectChampion = function(champName){
-
-      var summonerData = ($scope.radioColor == 'Blue') ? $scope.leftSummonerData : $scope.rightSummonerData;
-
-      var nameIndex = summonerData.selectedChampions.indexOf(champName);
-      if(nameIndex == -1){
-         summonerData.selectedChampions.push(champName);
-      }
-      else{
-         summonerData.selectedChampions.splice(nameIndex, 1);
-      }
-
-      summonerData.selectedChampions = summonerData.selectedChampions.sort();
-
-      $('#'+champName).toggleClass('selected-'+$scope.radioColor);
-
-      console.log(summonerData.selectedChampions);
-
-   }
-
-   $scope.nameMatches = function(searchName, champName){
-      var regexp = new RegExp('^.*' + searchName + '.*$', 'i');
-      return champName.match(regexp)==null?false:true;
-   }
-
 });
-
-
-
-
-
-//Controller responsible for stat comparison related tasks
-app.controller('ComparisonCtrl', function($scope, StatCompareService){
-
-   $scope.championData = StatCompareService;
-   $scope.statTableRows = [];
-
-   //Remove stats of previously chosen champions when a new champion is selected
-   $scope.$watch('championData', function(){
-      $scope.statTableRows = [];
-   }, true);
-
-   $scope.compareStats = function(){
-
-      if($scope.championData.leftChampionData.displayName == '?' || 
-         $scope.championData.rightChampionData.displayName == '?'){
-         //At least one champion hasn't been selected. Display error message?
-         return;
-      }
-
-      $scope.statTableRows = [];
-      var tmpStatTableRows = [];
-
-      var leftIcon = {color: 'orange', icon: 'minus'}, 
-          rightIcon = {color: 'orange', icon: 'minus'};
-      var difference;
-
-      for(var stat in StatCompareService.leftChampionData.stats){
-
-         difference = StatCompareService.leftChampionData.stats[stat] - 
-                      StatCompareService.rightChampionData.stats[stat];
-
-         //Change icon object depending on stat difference
-         if(difference < 0){
-            leftIcon = {color: 'red', icon: 'arrow-down'};
-            rightIcon = {color: 'green', icon: 'arrow-up'};
-         } 
-         else if(difference > 0){
-            leftIcon = {color: 'green', icon: 'arrow-up'};
-            rightIcon = {color: 'red', icon: 'arrow-down'};
-         }
-
-         tmpStatTableRows.push({
-            left: {
-               stats: StatCompareService.leftChampionData.stats[stat],
-               color: leftIcon.color,
-               icon: leftIcon.icon
-            },
-            statName: stat,
-            right: {
-               stats: StatCompareService.rightChampionData.stats[stat],
-               color: rightIcon.color,
-               icon: rightIcon.icon
-            }
-         });
-
-      }
-
-      //Filter out stats that are 0 for both of the selected champions
-      $scope.statTableRows = tmpStatTableRows.filter(function(row){
-         return row.left.stats > 0 || row.right.stats > 0;
-      })
-      //Change camel cased stat names to space seperated
-      .map(function(row){
-         row.statName = fromCamelCase(row.statName);
-         return row;
-      });
-
-      console.log($scope.statTableRows);
-   };
-});
-
