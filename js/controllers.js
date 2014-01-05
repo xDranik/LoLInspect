@@ -3,32 +3,35 @@ var app = angular.module('app.controllers', [])
 //Controller responsible for the left column on the page
 app.controller('LeftSummonerSearchCtrl', function($scope, $http, StatCompareService, RiotApiService){
 
+   //REMOVE STATCOMPARESERVICE?
+
    $scope.regions = ['NA', 'EUW', 'EUNE'];
    $scope.region = $scope.regions[0];
-   $scope.showSummoner = false;
 
-   //List of champions a specific summoner has played during season 3 ranked
-   $scope.champions = [];
+
+   //CHANGE SHOW BACK TO FALSE!
+   $scope.success = {show:false, message: 'Search Successfull'};
+   $scope.failure = {show:false, message: 'Incorrect Info'};
+
+   $scope.summonerColor = 'Blue';
+
+   // $scope.summonerInfo = undefined;
+   // $scope.summonerChampionData = undefined;
+
+   $scope.summonerInfo = {name: 'xDranik', summonerLevel: '30'};
+   $scope.summonerChampionData = {};
+
+   $scope.selectedChampions = ['Aatrox', 'Ashe', 'Fiddle Sticks', 'Ryze'];//sort before dispalying
+   $scope.showOrHideSelectedChampions = 'hide';
+   $scope.toggleSelectedChampionList = function(){
+      $scope.showOrHideSelectedChampions = 
+         $scope.showOrHideSelectedChampions == 'hide' ? 'show' : 'hide';
+      $('#'+$scope.summonerColor+'-list').slideToggle();
+   }
 
 
    $scope.querySummoner = function(){
-      //Reset display name b/c a new (or same) summoner name is being searched
-      StatCompareService.leftChampionData = {displayName: '?'};
-
-      RiotApiService.getSummonerIdFromName($scope, $http);
-   }
-
-   //Provides updated data to the Comparison Controller in order to compare stats
-   $scope.updateStatCompareData = function(champion){//REMOVE
-      $scope.championFilter = champion.name;
-
-      //Include summoner name with champion name to eliminate confusion
-      champion.displayName = champion.name + ' (' + $scope.summonerName + ')';
-
-      StatCompareService.leftChampionData = champion;
-      console.log(StatCompareService);
-
-      $scope.showChampionList = false;
+      RiotApiService.getSummonerInfoFromName($scope, $http);
    }
 
 });
@@ -36,6 +39,8 @@ app.controller('LeftSummonerSearchCtrl', function($scope, $http, StatCompareServ
 //Controller responsible for the right column on the page
 app.controller('RightSummonerSearchCtrl', function($scope, $http, StatCompareService, RiotApiService){
 
+   //REMOVE STATCOMPARESERVICE?
+
    $scope.regions = ['NA', 'EUW', 'EUNE'];
    $scope.region = $scope.regions[0];
    $scope.showSummoner = false;
@@ -43,27 +48,79 @@ app.controller('RightSummonerSearchCtrl', function($scope, $http, StatCompareSer
    //List of champions a specific summoner has played during season 3 ranked
    $scope.champions = [];
 
-   $scope.querySummoner = function(){
-      //Reset display name b/c a new (or same) summoner name is being searched
-      StatCompareService.rightChampionData = {displayName: '?'};
+   $scope.success = {show:false, message: 'Search Successfull'};
+   $scope.failure = {show:false, message: 'Invalid Summoner'};
 
-      RiotApiService.getSummonerIdFromName($scope, $http);
+   $scope.summonerColor = 'Red';
+
+   // $scope.summonerInfo = undefined;
+   // $scope.summonerChampionData = undefined;
+
+   $scope.summonerInfo = {name: 'xDranik', summonerLevel: '30'};
+   $scope.summonerChampionData = {};
+
+   $scope.selectedChampions = ['Aatrox', 'Ashe', 'Fiddle Sticks', 'Ryze'];//sort before dispalying
+
+   $scope.showOrHideSelectedChampions = 'hide';
+   $scope.toggleSelectedChampionList = function(){
+      $scope.showOrHideSelectedChampions = 
+         $scope.showOrHideSelectedChampions == 'hide' ? 'show' : 'hide';
+      $('#'+$scope.summonerColor+'-list').slideToggle();
    }
 
-   //Provides updated data to the Comparison Controller in order to compare stats
-   $scope.updateStatCompareData = function(champion){//REMOVE
-      $scope.championFilter = champion.name;
 
-      //Include summoner name with champion name to eliminate confusion
-      champion.displayName = champion.name + ' (' + $scope.summonerName + ')';
 
-      StatCompareService.rightChampionData = champion;
-      console.log(StatCompareService);
+   $scope.querySummoner = function(){
+      RiotApiService.getSummonerInfoFromName($scope, $http);
+   }
 
-      $scope.showChampionList = false;
+
+});
+
+
+app.controller('MainCtrl', function($scope){
+
+   $scope.fromCamelCase = function(string){
+      return string[0].toUpperCase() + 
+         string.substring(1, string.length)
+            .replace(/[A-Z]/g, function(match){return ' ' + match;})
+   }
+
+   $scope.championNames = ["Aatrox", "Ahri", "Akali", "Alistar", "Amumu", "Anivia", "Annie", "Ashe", "Blitzcrank", "Brand", "Caitlyn", "Cassiopeia", "Chogath", "Corki", "Darius", "Diana", "Draven", "DrMundo", "Elise", "Evelynn", "Ezreal", "FiddleSticks", "Fiora", "Fizz", "Galio", "Gangplank", "Garen", "Gragas", "Graves", "Hecarim", "Heimerdinger", "Irelia", "Janna", "JarvanIV", "Jax", "Jayce", "Jinx", "Karma", "Karthus", "Kassadin", "Katarina", "Kayle", "Kennen", "Khazix", "KogMaw", "Leblanc", "LeeSin", "Leona", "Lissandra", "Lucian", "Lulu", "Lux", "Malphite", "Malzahar", "Maokai", "MasterYi", "MissFortune", "MonkeyKing", "Mordekaiser", "Morgana", "Nami", "Nasus", "Nautilus", "Nidalee", "Nocturne", "Nunu", "Olaf", "Orianna", "Pantheon", "Poppy", "Quinn", "Rammus", "Renekton", "Rengar", "Riven", "Rumble", "Ryze", "Sejuani", "Shaco", "Shen", "Shyvana", "Singed", "Sion", "Sivir", "Sona", "Soraka", "Swain", "Syndra", "Talon", "Taric", "Teemo", "Thresh", "Tristana", "Trundle", "Tryndamere", "TwistedFate", "Twitch", "Udyr", "Urgot", "Varus", "Vayne", "Veigar", "Vi", "Viktor", "Vladimir", "Volibear", "Warwick", "Xerath", "XinZhao", "Yasuo", "Yorick", "Zac", "Zed", "Ziggs", "Zilean", "Zyra"];
+   $scope.spacedChampionNames = $scope.championNames.map(function(name){
+      return $scope.fromCamelCase(name);
+   });
+
+   $scope.championSearchName = '';
+
+   $scope.selectedChampions = [];
+   $scope.selectChampion = function(champName){
+      var nameIndex = $scope.selectedChampions.indexOf(champName);
+      if(nameIndex == -1){
+         $scope.selectedChampions.push(champName);
+      }
+      else{
+         $scope.selectedChampions.splice(nameIndex, 1);
+      }
+
+      $('#'+champName).toggleClass('selected');
+
+      console.log($scope.selectedChampions)
+   }
+
+   $scope.nameMatches = function(searchName, champName){
+      var regexp = new RegExp('^.*' + searchName + '.*$', 'i');
+      return champName.match(regexp)==null?false:true;
    }
 
 });
+
+
+
+
+
+
+
 
 //Controller responsible for stat comparison related tasks
 app.controller('ComparisonCtrl', function($scope, StatCompareService){
@@ -136,39 +193,3 @@ app.controller('ComparisonCtrl', function($scope, StatCompareService){
    };
 });
 
-app.controller('MainCtrl', function($scope){
-
-   $scope.fromCamelCase = function(string){
-      return string[0].toUpperCase() + 
-         string.substring(1, string.length)
-            .replace(/[A-Z]/g, function(match){return ' ' + match;})
-   }
-
-   $scope.championNames = ["Aatrox", "Ahri", "Akali", "Alistar", "Amumu", "Anivia", "Annie", "Ashe", "Blitzcrank", "Brand", "Caitlyn", "Cassiopeia", "Chogath", "Corki", "Darius", "Diana", "Draven", "DrMundo", "Elise", "Evelynn", "Ezreal", "FiddleSticks", "Fiora", "Fizz", "Galio", "Gangplank", "Garen", "Gragas", "Graves", "Hecarim", "Heimerdinger", "Irelia", "Janna", "JarvanIV", "Jax", "Jayce", "Jinx", "Karma", "Karthus", "Kassadin", "Katarina", "Kayle", "Kennen", "Khazix", "KogMaw", "Leblanc", "LeeSin", "Leona", "Lissandra", "Lucian", "Lulu", "Lux", "Malphite", "Malzahar", "Maokai", "MasterYi", "MissFortune", "MonkeyKing", "Mordekaiser", "Morgana", "Nami", "Nasus", "Nautilus", "Nidalee", "Nocturne", "Nunu", "Olaf", "Orianna", "Pantheon", "Poppy", "Quinn", "Rammus", "Renekton", "Rengar", "Riven", "Rumble", "Ryze", "Sejuani", "Shaco", "Shen", "Shyvana", "Singed", "Sion", "Sivir", "Sona", "Soraka", "Swain", "Syndra", "Talon", "Taric", "Teemo", "Thresh", "Tristana", "Trundle", "Tryndamere", "TwistedFate", "Twitch", "Udyr", "Urgot", "Varus", "Vayne", "Veigar", "Vi", "Viktor", "Vladimir", "Volibear", "Warwick", "Xerath", "XinZhao", "Yasuo", "Yorick", "Zac", "Zed", "Ziggs", "Zilean", "Zyra"];
-   $scope.spacedChampionNames = $scope.championNames.map(function(name){
-      return $scope.fromCamelCase(name);
-   });
-
-   $scope.championSearchName = '';
-
-   $scope.selectedChampions = [];
-   $scope.selectChampion = function(champName){
-      var nameIndex = $scope.selectedChampions.indexOf(champName);
-      if(nameIndex == -1){
-         $scope.selectedChampions.push(champName);
-      }
-      else{
-         $scope.selectedChampions.splice(nameIndex, 1);
-      }
-
-      $('#'+champName).toggleClass('selected');
-
-      console.log($scope.selectedChampions)
-   }
-
-   $scope.nameMatches = function(searchName, champName){
-      var regexp = new RegExp('^.*' + searchName + '.*$', 'i');
-      return champName.match(regexp)==null?false:true;
-   }
-
-});

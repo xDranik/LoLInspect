@@ -20,3 +20,10 @@ app.directive('statComparison', function(){
       templateUrl: '../html/partials/directives/stat_comp.html'
    };
 });
+
+app.directive('selectedChamps', function(){
+   return {
+      restrict: 'E',
+      templateUrl: '../html/partials/directives/selected_champs.html'
+   };
+});
