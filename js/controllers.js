@@ -1,9 +1,7 @@
 var app = angular.module('app.controllers', [])
 
 //Controller responsible for the left column on the page
-app.controller('LeftSummonerSearchCtrl', function($scope, $http, StatCompareService, RiotApiService){
-
-   //REMOVE STATCOMPARESERVICE?
+app.controller('LeftSummonerSearchCtrl', function($scope, $http, RiotApiService, LeftSummonerDataService){
 
    $scope.regions = ['NA', 'EUW', 'EUNE'];
    $scope.region = $scope.regions[0];
@@ -15,17 +13,16 @@ app.controller('LeftSummonerSearchCtrl', function($scope, $http, StatCompareServ
 
    $scope.summonerColor = 'Blue';
 
-   // $scope.summonerInfo = undefined;
-   // $scope.summonerChampionData = undefined;
+   $scope.summonerInfo = undefined;
+   $scope.summonerChampionData = undefined;
 
-   $scope.summonerInfo = {name: 'xDranik', summonerLevel: '30'};
-   $scope.summonerChampionData = {};
+   $scope.summonerData = LeftSummonerDataService;
 
-   $scope.selectedChampions = ['Aatrox', 'Ashe', 'Fiddle Sticks', 'Ryze'];//sort before dispalying
    $scope.showOrHideSelectedChampions = 'hide';
    $scope.toggleSelectedChampionList = function(){
       $scope.showOrHideSelectedChampions = 
          $scope.showOrHideSelectedChampions == 'hide' ? 'show' : 'hide';
+
       $('#'+$scope.summonerColor+'-list').slideToggle();
    }
 
@@ -37,9 +34,7 @@ app.controller('LeftSummonerSearchCtrl', function($scope, $http, StatCompareServ
 });
 
 //Controller responsible for the right column on the page
-app.controller('RightSummonerSearchCtrl', function($scope, $http, StatCompareService, RiotApiService){
-
-   //REMOVE STATCOMPARESERVICE?
+app.controller('RightSummonerSearchCtrl', function($scope, $http, RiotApiService, RightSummonerDataService){
 
    $scope.regions = ['NA', 'EUW', 'EUNE'];
    $scope.region = $scope.regions[0];
@@ -49,22 +44,21 @@ app.controller('RightSummonerSearchCtrl', function($scope, $http, StatCompareSer
    $scope.champions = [];
 
    $scope.success = {show:false, message: 'Search Successfull'};
-   $scope.failure = {show:false, message: 'Invalid Summoner'};
+   $scope.failure = {show:false, message: 'Incorrect Info'};
 
    $scope.summonerColor = 'Red';
 
-   // $scope.summonerInfo = undefined;
-   // $scope.summonerChampionData = undefined;
+   $scope.summonerInfo = undefined;
+   $scope.summonerChampionData = undefined;
 
-   $scope.summonerInfo = {name: 'xDranik', summonerLevel: '30'};
-   $scope.summonerChampionData = {};
+   $scope.summonerData = RightSummonerDataService;
 
-   $scope.selectedChampions = ['Aatrox', 'Ashe', 'Fiddle Sticks', 'Ryze'];//sort before dispalying
 
    $scope.showOrHideSelectedChampions = 'hide';
    $scope.toggleSelectedChampionList = function(){
       $scope.showOrHideSelectedChampions = 
          $scope.showOrHideSelectedChampions == 'hide' ? 'show' : 'hide';
+
       $('#'+$scope.summonerColor+'-list').slideToggle();
    }
 
@@ -78,7 +72,7 @@ app.controller('RightSummonerSearchCtrl', function($scope, $http, StatCompareSer
 });
 
 
-app.controller('MainCtrl', function($scope){
+app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummonerDataService){
 
    $scope.fromCamelCase = function(string){
       return string[0].toUpperCase() + 
@@ -86,26 +80,79 @@ app.controller('MainCtrl', function($scope){
             .replace(/[A-Z]/g, function(match){return ' ' + match;})
    }
 
-   $scope.championNames = ["Aatrox", "Ahri", "Akali", "Alistar", "Amumu", "Anivia", "Annie", "Ashe", "Blitzcrank", "Brand", "Caitlyn", "Cassiopeia", "Chogath", "Corki", "Darius", "Diana", "Draven", "DrMundo", "Elise", "Evelynn", "Ezreal", "FiddleSticks", "Fiora", "Fizz", "Galio", "Gangplank", "Garen", "Gragas", "Graves", "Hecarim", "Heimerdinger", "Irelia", "Janna", "JarvanIV", "Jax", "Jayce", "Jinx", "Karma", "Karthus", "Kassadin", "Katarina", "Kayle", "Kennen", "Khazix", "KogMaw", "Leblanc", "LeeSin", "Leona", "Lissandra", "Lucian", "Lulu", "Lux", "Malphite", "Malzahar", "Maokai", "MasterYi", "MissFortune", "MonkeyKing", "Mordekaiser", "Morgana", "Nami", "Nasus", "Nautilus", "Nidalee", "Nocturne", "Nunu", "Olaf", "Orianna", "Pantheon", "Poppy", "Quinn", "Rammus", "Renekton", "Rengar", "Riven", "Rumble", "Ryze", "Sejuani", "Shaco", "Shen", "Shyvana", "Singed", "Sion", "Sivir", "Sona", "Soraka", "Swain", "Syndra", "Talon", "Taric", "Teemo", "Thresh", "Tristana", "Trundle", "Tryndamere", "TwistedFate", "Twitch", "Udyr", "Urgot", "Varus", "Vayne", "Veigar", "Vi", "Viktor", "Vladimir", "Volibear", "Warwick", "Xerath", "XinZhao", "Yasuo", "Yorick", "Zac", "Zed", "Ziggs", "Zilean", "Zyra"];
+   //get this info from Riot's api!
+   $scope.championNames = ["Aatrox", "Ahri", "Akali", "Alistar", "Amumu", "Anivia", "Annie", 
+      "Ashe", "Blitzcrank", "Brand", "Caitlyn", "Cassiopeia", "Chogath", "Corki", "Darius", 
+      "Diana", "Draven", "DrMundo", "Elise", "Evelynn", "Ezreal", "FiddleSticks", "Fiora", 
+      "Fizz", "Galio", "Gangplank", "Garen", "Gragas", "Graves", "Hecarim", "Heimerdinger", 
+      "Irelia", "Janna", "JarvanIV", "Jax", "Jayce", "Jinx", "Karma", "Karthus", "Kassadin", 
+      "Katarina", "Kayle", "Kennen", "Khazix", "KogMaw", "Leblanc", "LeeSin", "Leona", "Lissandra", 
+      "Lucian", "Lulu", "Lux", "Malphite", "Malzahar", "Maokai", "MasterYi", "MissFortune", 
+      "MonkeyKing", "Mordekaiser", "Morgana", "Nami", "Nasus", "Nautilus", "Nidalee", "Nocturne", 
+      "Nunu", "Olaf", "Orianna", "Pantheon", "Poppy", "Quinn", "Rammus", "Renekton", "Rengar", 
+      "Riven", "Rumble", "Ryze", "Sejuani", "Shaco", "Shen", "Shyvana", "Singed", "Sion", "Sivir", 
+      "Sona", "Soraka", "Swain", "Syndra", "Talon", "Taric", "Teemo", "Thresh", "Tristana", "Trundle", 
+      "Tryndamere", "TwistedFate", "Twitch", "Udyr", "Urgot", "Varus", "Vayne", "Veigar", "Vi", "Viktor", 
+      "Vladimir", "Volibear", "Warwick", "Xerath", "XinZhao", "Yasuo", "Yorick", "Zac", "Zed", "Ziggs", 
+      "Zilean", "Zyra"];
    $scope.spacedChampionNames = $scope.championNames.map(function(name){
       return $scope.fromCamelCase(name);
    });
 
    $scope.championSearchName = '';
 
-   $scope.selectedChampions = [];
+   $scope.leftSummonerData = LeftSummonerDataService;
+   $scope.rightSummonerData = RightSummonerDataService;
+
+   $scope.radioColor = 'Blue';
+
+
+   $scope.$watch('radioColor', function(currVal, oldVal){
+
+      //If radio button changed...switch all the colors!!
+      if(currVal != oldVal){
+
+         var oldSelectedChampions, currSelectedChampions;
+
+         if(oldVal == 'Blue'){
+            oldSelectedChampions = $scope.leftSummonerData.selectedChampions;
+            currSelectedChampions = $scope.rightSummonerData.selectedChampions;
+         }
+         else{
+            oldSelectedChampions = $scope.rightSummonerData.selectedChampions;
+            currSelectedChampions = $scope.leftSummonerData.selectedChampions;
+         }
+
+         for(var i=0; i<oldSelectedChampions.length; i++){
+            $('#'+oldSelectedChampions[i]).removeClass('selected-'+oldVal);
+         }
+         for(var i=0; i<currSelectedChampions.length; i++){
+            $('#'+currSelectedChampions[i]).addClass('selected-'+currVal);
+         }
+
+      }
+
+   });
+
+
    $scope.selectChampion = function(champName){
-      var nameIndex = $scope.selectedChampions.indexOf(champName);
+
+      var summonerData = ($scope.radioColor == 'Blue') ? $scope.leftSummonerData : $scope.rightSummonerData;
+
+      var nameIndex = summonerData.selectedChampions.indexOf(champName);
       if(nameIndex == -1){
-         $scope.selectedChampions.push(champName);
+         summonerData.selectedChampions.push(champName);
       }
       else{
-         $scope.selectedChampions.splice(nameIndex, 1);
+         summonerData.selectedChampions.splice(nameIndex, 1);
       }
 
-      $('#'+champName).toggleClass('selected');
+      summonerData.selectedChampions = summonerData.selectedChampions.sort();
 
-      console.log($scope.selectedChampions)
+      $('#'+champName).toggleClass('selected-'+$scope.radioColor);
+
+      console.log(summonerData.selectedChampions);
+
    }
 
    $scope.nameMatches = function(searchName, champName){
@@ -114,9 +161,6 @@ app.controller('MainCtrl', function($scope){
    }
 
 });
-
-
-
 
 
 
