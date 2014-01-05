@@ -1,0 +1,18 @@
+<div ng-show="summonerInfo != undefined && summonerChampionData != undefined" class="div-bg-color round-div" style="width:210px;padding:10px 15px">
+
+   <div>
+      <h5>Name: {{summonerInfo.name}}</h5>
+      <h5>Level: {{summonerInfo.summonerLevel}}</h5>
+   </div>
+
+   <div>
+      Selected Champions ( <span class="{{summonerColor}}">{{selectedChampions.length}}</span> ) : 
+
+      <a href="#" ng-click="toggleSelectedChampionList()" ng-bind="showOrHideSelectedChampions"></a>
+
+      <ul id="{{summonerColor}}-list">
+         <li ng-repeat="champion in selectedChampions">{{champion}}</li>
+      </ul>
+   </div>
+
+</div>
