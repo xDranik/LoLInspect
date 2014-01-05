@@ -1,8 +1,20 @@
 <div id="stat-comp-container" class="margin-bot-30">
 
-   <div id="champ-list-assists" class="margin-top-10">
+   <div id="champ-list-assists" class="margin-top-10 margin-bot-30">
 
       <h2 class="inline-b" style="float:left">Select Champion(s)</h2>
+
+<!--    <div class="btn-group margin-top-20 margin-left-30">
+      <button type="button" class="btn selected-blue" style="color:#0b0b0b">Left</button>
+      <button type="button" class="btn btn-default">Right</button>
+   </div> -->
+
+      <!-- Use btn-group instead of radio buttons! -->
+      <div id="championColorSelect" class="inline-b margin-top-20 margin-left-30">
+         <input ng-model="radioColor" type="radio" value="Blue">Blue
+         <input ng-model="radioColor" type="radio" value="Red">Red
+      </div>
+
 
       <input ng-model="championSearchName" type="text" class="form-control width-165 margin-top-20" placeholder="Champion Name" style="float:right;">
 
