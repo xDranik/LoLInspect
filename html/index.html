@@ -46,11 +46,11 @@
          <div id="main-content" class="content-max-width margin-center">
             
             <!-- Code for left side summoner and champion selection -->
-            <div ng-controller="LeftSummonerSearchCtrl" class="inline-b div-bg-color summoner-search-container round-div">
+            <div ng-controller="LeftSummonerSearchCtrl" class="inline-b" style="vertical-align:top">
 
                <summoner-form></summoner-form>
 
-               <!-- <champion-list></champion-list> -->
+               <selected-champs></selected-champs>
 
             </div>
 
@@ -65,11 +65,11 @@
 
 
             <!-- Code for right side summoner and champion selection -->
-            <div ng-controller="RightSummonerSearchCtrl" class="inline-b margin-left-15 div-bg-color summoner-search-container round-div">
+            <div ng-controller="RightSummonerSearchCtrl" class="inline-b margin-left-15" style="vertical-align:top">
 
                <summoner-form></summoner-form>
 
-               <!-- <champion-list></champion-list> -->
+               <selected-champs></selected-champs>
 
             </div>
 
