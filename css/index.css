@@ -3,6 +3,14 @@ body{
    background-color: #0b0b0b;
 }
 
+input[type="text"]{
+   color: white;
+   background-color: black;
+}
+
+select{
+   background-color: black;
+}
 
 .champ-div{
    height: 60px;
@@ -11,24 +19,52 @@ body{
    cursor: pointer;
    margin-left: 7.5px;
    margin-right: 7.5px;
-   /*margin-bottom: 10px;*/
 }
 
 .champ-icon{
-   margin: 5px 5px;
+   margin-left: 5px;
+   margin-top: 5px;
+}
+
+
+.champ-name{
+   color: white;
+   background-color: black;
+   font-size: 8px;
+   position:relative;
+   text-align: center;
+   bottom:12px;
+   opacity: .8;
+   margin: 0 5px;
+   width: 50px;
 }
 
 
 
-.selected{
-   /*background-color: #FFCC00;*/
-   background-color: #1E90FF;
+.Blue{
+   color: #00BFFF;
 }
+
+.Red{
+   color: #FA8072;
+}
+
+
+.selected-Blue{
+   background-color: #00BFFF;
+   border: 1px solid #00BFFF;
+}
+
+.selected-Red{
+   background-color: #FA8072;
+   border: 1px solid #FA8072;
+}
+
 
 #champ-list-container{
    width: 690px;
-   height: 300px;
-   overflow-y: auto;/*??*/
+   height: 280px;
+   overflow-y: auto;
 }
 
 .summoner-search-container{
@@ -55,34 +91,20 @@ body{
    width: 690px;
 }
 
-.champ-name{
-   color: white;
-   background-color: black;
-   font-size: 8px;
-   position:relative;
-   text-align: center;
-   bottom:18px;
-   opacity: .8;
-   margin: 0 5px;
-}
-
-
-.Blue{
-   color: #00BFFF;
-}
-
-.Red{
-   color: #FA8072;
-}
-
-
-
 .inline-b{
    display: inline-block;
 }
 
 .content-max-width{
    width: 1150px; 
+}
+
+.round-div{
+   border-radius: 5px;
+}
+
+.div-bg-color{
+   background-color: #222222;
 }
 
 .margin-center{
@@ -120,15 +142,3 @@ body{
 .margin-bot-15{
    margin-bottom: 15px;
 }
-
-.round-div{
-   border-radius: 5px;
-}
-
-.div-bg-color{
-   background-color: #222222;
-}
-
-/*h3{
-   margin-left: 10px;
-}*/
