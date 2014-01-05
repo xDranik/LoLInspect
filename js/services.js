@@ -1,21 +1,6 @@
 var app = angular.module('app.services', []);
 
 /*
-   The StatCompareService factory will be used to share data
-   between the Left/Right Summoner controllers and the
-   stat comparison controller.
-*/
-
-//REMOVE?
-app.factory('StatCompareService', function(){
-   return {
-      leftChampionData: {displayName: '?'},
-      rightChampionData: {displayName: '?'},
-      comparisonData: undefined
-   }
-});
-
-/*
    The RiotApiService factory is in charge of handling any API
    requests to Riot's API. Include anything that requires consuming
    Riot's API.
@@ -49,6 +34,9 @@ app.factory('RiotApiService', function(){
 
             $scope.failure.message = 'Requires level 30';
             $scope.failure.show = true;
+
+            $scope.summonerInfo = undefined;
+            $scope.summonerChampionData = undefined;
             return;
          }
 
@@ -63,7 +51,7 @@ app.factory('RiotApiService', function(){
          console.log('HTTP status code: ' + status);
 
          $scope.success.show = false;
-         $scope.failure.message = 'Invalid Summoner';
+         $scope.failure.message = 'Incorrect Info';
          $scope.failure.show = true;
 
          $scope.summonerInfo = undefined;
@@ -105,4 +93,50 @@ app.factory('RiotApiService', function(){
    };
 
    return riotApiService;
+});
+
+
+/*
+   leftsummonerdataservice and right so mainctrl and both summoners
+   can exchange selected summoenrs. also used when comparising stats
+*/
+
+app.factory('LeftSummonerDataService', function(){
+
+   return{
+      summonerName: undefined,
+      selectedChampions: []
+   }
+
+});
+
+app.factory('RightSummonerDataService', function(){
+
+   return{
+      summonerName: undefined,
+      selectedChampions: []
+   }
+
+});
+
+
+
+
+
+
+
+
+/*
+   The StatCompareService factory will be used to share data
+   between the Left/Right Summoner controllers and the
+   stat comparison controller.
+*/
+
+//REMOVE?
+app.factory('StatCompareService', function(){
+   return {
+      leftChampionData: {displayName: '?'},
+      rightChampionData: {displayName: '?'},
+      comparisonData: undefined
+   }
 });
