@@ -9,28 +9,32 @@ body{
    width: 60px;
    display: inline-block;
    cursor: pointer;
+   margin-right: 15px;
+   /*margin-bottom: 10px;*/
 }
 
 .champ-icon{
    margin: 5px 5px;
 }
 
+
+
 .selected{
    background-color: #FFCC00;
 }
 
 #champ-list-container{
-   width: 615px;
-   height: 250px;
+   width: 690px;
+   height: 300px;
    overflow-y: auto;/*??*/
 }
 
 .summoner-search-container{
-   width: 250px;
+   width: 210px;
    vertical-align: top;
 }
 
-.summoner-search{
+.width-165{
    width: 165px;
 }
 
@@ -45,15 +49,35 @@ body{
 }
 
 #stat-comp-container{
-   width: 660px;
+   width: 690px;
 }
+
+
+
+
+
+.champ-name{
+   color: white;
+   background-color: black;
+   font-size: 8px;
+   position:relative;
+   text-align: center;
+   bottom:18px;
+   opacity: .8;
+   margin: 0 5px;
+}
+
+
+
+
+
 
 .inline-b{
    display: inline-block;
 }
 
 .content-max-width{
-   width: 1200px; 
+   width: 1150px; 
 }
 
 .margin-center{
