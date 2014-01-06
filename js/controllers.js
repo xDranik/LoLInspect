@@ -164,6 +164,9 @@ app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummon
    $scope.radioColor = 'Blue';
 
    $scope.statComparisonTableRows = [];
+
+   $scope.showStatCompareTable = false;
+
    /*
       Swap the champions selected by the old side with
       the champions selected by the new side 
@@ -223,16 +226,16 @@ app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummon
                .indexOf(championObj.name) != -1;
          });
 
-      var leftSum, rightSum, tableRows = [], statNames = [];
+      var leftSum, rightSum, tableRows = [], statNames;
       var leftIcon = {color: 'orange', icon: 'minus'}, 
           rightIcon = {color: 'orange', icon: 'minus'};
 
       //Get number of available stats
-      var numStatsPerChamp = Object.keys($scope.leftSummonerData.championDataFromApi[0].stats).length;
+      var statNames = Object.keys($scope.leftSummonerData.championDataFromApi[0].stats);
 
       //Initial stat sum array full of 0's
       var leftStatSums = [], rightStatSums = [];
-      for(var i=0; i<numStatsPerChamp; i++){
+      for(var i=0; i<statNames.length; i++){
          leftStatSums[i] = 0;
          rightStatSums[i] = 0;
       }
@@ -243,8 +246,8 @@ app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummon
          index = 0;
          for(var stat in leftChampionDataFromApi[i].stats){
             leftStatSums[index++] += leftChampionDataFromApi[i].stats[stat];
-            statNames.push(stat);//Gather stat property names for comparison table
          }
+         
       }
 
       for(var i=0; i<rightChampionDataFromApi.length; i++){
@@ -286,7 +289,7 @@ app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummon
       }
 
       $scope.statComparisonTableRows = tableRows;
-      console.log(JSON.stringify($scope.statComparisonTableRows));
+      $scope.showStatCompareTable = true;
    }
 
 });
