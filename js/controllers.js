@@ -232,10 +232,6 @@ app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummon
 
       var leftSum, rightSum, tableRows = [], statNames;
 
-      //Color and icon info for glyphicons in stat comparison table
-      var leftIcon = {color: 'Orange', icon: 'minus'}, 
-          rightIcon = {color: 'Orange', icon: 'minus'};
-
       //Get stat names from champion object
       var statNames = Object.keys($scope.leftSummonerData.championDataFromApi[0].stats);
 
@@ -268,10 +264,14 @@ app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummon
          }
       }
 
-      var difference;
+      var difference, leftIcon, rightIcon;
       for(var i=0; i<statNames.length; i++){
 
          difference = leftStatSums[i] - rightStatSums[i];
+
+         //Color and icon info for glyphicons in stat comparison table
+         leftIcon = {color: 'Orange', icon: 'minus'}, 
+         rightIcon = {color: 'Orange', icon: 'minus'};
 
          //Change glyphicon color and icon depending on stat difference
          if(difference < 0){
@@ -304,3 +304,11 @@ app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummon
    }
 
 });
+
+
+
+
+
+
+
+
