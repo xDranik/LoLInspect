@@ -6,9 +6,19 @@ var app = angular.module('app.controllers', []);
    - Summoner info display
    - Success/Error messages (nodifications?)
    - List of selected champions
-   ..and being super awesome
+   ..and being more awesome than the RightSummonerSearchCtrl
 */
-app.controller('LeftSummonerSearchCtrl', function($scope, $http, RiotApiService, LeftSummonerDataService){
+app.controller('LeftSummonerSearchCtrl', function($scope, $http, $timeout, RiotApiService, LeftSummonerDataService){
+
+   $scope.fromCamelCase = function(string){
+      if(string == 'FiddleSticks') return 'Fiddlesticks';
+      if(string == 'JarvanIV') return 'Jarvan IV';
+      if(string == 'DrMundo') return 'Dr. Mundo';
+
+      return string[0].toUpperCase() + 
+         string.substring(1, string.length)
+            .replace(/[A-Z]/g, function(match){return ' ' + match;})
+   }
 
    $scope.toggleSelectedChampionList = function(){
 
@@ -20,7 +30,7 @@ app.controller('LeftSummonerSearchCtrl', function($scope, $http, RiotApiService,
    }
 
    $scope.querySummoner = function(){
-      RiotApiService.getSummonerInfoFromName($scope, $http);
+      RiotApiService.getSummonerInfoFromName($scope, $http, $timeout);
    }
 
    $scope.regions = ['NA', 'EUW', 'EUNE'];
@@ -31,9 +41,10 @@ app.controller('LeftSummonerSearchCtrl', function($scope, $http, RiotApiService,
 
    $scope.summonerColor = 'Blue';
 
+   $scope.showOrHideSelectedChampions = 'hide';
+
    $scope.summonerData = LeftSummonerDataService;
 
-   $scope.showOrHideSelectedChampions = 'hide';
 
 });
 
@@ -43,9 +54,19 @@ app.controller('LeftSummonerSearchCtrl', function($scope, $http, RiotApiService,
    - Summoner info display
    - Success/Error messages (nodifications?)
    - List of selected champions
-   ..and being super awesome
+   ..and being more awesome than the LeftSummonerSearchCtrl
 */
-app.controller('RightSummonerSearchCtrl', function($scope, $http, RiotApiService, RightSummonerDataService){
+app.controller('RightSummonerSearchCtrl', function($scope, $http, $timeout, RiotApiService, RightSummonerDataService){
+
+   $scope.fromCamelCase = function(string){
+      if(string == 'FiddleSticks') return 'Fiddlesticks';
+      if(string == 'JarvanIV') return 'Jarvan IV';
+      if(string == 'DrMundo') return 'Dr. Mundo';
+
+      return string[0].toUpperCase() + 
+         string.substring(1, string.length)
+            .replace(/[A-Z]/g, function(match){return ' ' + match;})
+   }
 
    $scope.toggleSelectedChampionList = function(){
 
@@ -57,7 +78,7 @@ app.controller('RightSummonerSearchCtrl', function($scope, $http, RiotApiService
    }
 
    $scope.querySummoner = function(){
-      RiotApiService.getSummonerInfoFromName($scope, $http);
+      RiotApiService.getSummonerInfoFromName($scope, $http, $timeout);
    }
 
    $scope.regions = ['NA', 'EUW', 'EUNE'];
@@ -69,9 +90,9 @@ app.controller('RightSummonerSearchCtrl', function($scope, $http, RiotApiService
 
    $scope.summonerColor = 'Red';
 
-   $scope.summonerData = RightSummonerDataService;
-
    $scope.showOrHideSelectedChampions = 'hide';
+
+   $scope.summonerData = RightSummonerDataService;
 
 });
 
@@ -84,7 +105,13 @@ app.controller('RightSummonerSearchCtrl', function($scope, $http, RiotApiService
 */
 app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummonerDataService){
 
+   //Think about a seperate controller for stat comp and champ select
+
    $scope.fromCamelCase = function(string){
+      if(string == 'FiddleSticks') return 'Fiddlesticks';
+      if(string == 'JarvanIV') return 'Jarvan IV';
+      if(string == 'DrMundo') return 'Dr. Mundo';
+
       return string[0].toUpperCase() + 
          string.substring(1, string.length)
             .replace(/[A-Z]/g, function(match){return ' ' + match;})
@@ -105,11 +132,10 @@ app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummon
       summonerData.selectedChampions = summonerData.selectedChampions.sort();
 
       $('#'+champName).toggleClass('selected-'+$scope.radioColor);
-
-      console.log(summonerData.selectedChampions);
    }
 
    $scope.nameMatches = function(searchName, champName){
+      searchName = searchName.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
       var regexp = new RegExp('^.*' + searchName + '.*$', 'i');
       return champName.match(regexp)==null?false:true;
    }
@@ -129,9 +155,6 @@ app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummon
       "Tryndamere", "TwistedFate", "Twitch", "Udyr", "Urgot", "Varus", "Vayne", "Veigar", "Vi", "Viktor", 
       "Vladimir", "Volibear", "Warwick", "Xerath", "XinZhao", "Yasuo", "Yorick", "Zac", "Zed", "Ziggs", 
       "Zilean", "Zyra"];
-   $scope.spacedChampionNames = $scope.championNames.map(function(name){
-      return $scope.fromCamelCase(name);
-   });
 
    $scope.championSearchName = '';
 
@@ -140,7 +163,12 @@ app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummon
 
    $scope.radioColor = 'Blue';
 
-
+   $scope.statComparisonTableRows = [];
+   /*
+      Swap the champions selected by the old side with
+      the champions selected by the new side 
+      (fired on radio button change)
+   */
    $scope.$watch('radioColor', function(currVal, oldVal){
 
       //If radio button changed...switch all the colors!!
@@ -163,9 +191,126 @@ app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummon
          for(var i=0; i<currSelectedChampions.length; i++){
             $('#'+currSelectedChampions[i]).addClass('selected-'+currVal);
          }
-
       }
-
    });
 
+
+   $scope.compareStats = function(){
+
+      // $scope.statComparisonTableRows = [{"left":{"leftStatSum":36,"color":"green","icon":"arrow-up"},"statName":"totalSessionsPlayed","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":17,"color":"green","icon":"arrow-up"},"statName":"totalSessionsLost","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":19,"color":"green","icon":"arrow-up"},"statName":"totalSessionsWon","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":35,"color":"green","icon":"arrow-up"},"statName":"totalChampionKills","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":972895,"color":"green","icon":"arrow-up"},"statName":"totalDamageDealt","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":864959,"color":"green","icon":"arrow-up"},"statName":"totalDamageTaken","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":3,"color":"green","icon":"arrow-up"},"statName":"mostChampionKillsPerSession","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":898,"color":"green","icon":"arrow-up"},"statName":"totalMinionKills","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":0,"color":"green","icon":"arrow-up"},"statName":"totalDoubleKills","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":0,"color":"green","icon":"arrow-up"},"statName":"totalTripleKills","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":0,"color":"green","icon":"arrow-up"},"statName":"totalQuadraKills","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":0,"color":"green","icon":"arrow-up"},"statName":"totalPentaKills","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":0,"color":"green","icon":"arrow-up"},"statName":"totalUnrealKills","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":314762,"color":"green","icon":"arrow-up"},"statName":"totalGoldEarned","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":0,"color":"green","icon":"arrow-up"},"statName":"mostSpellsCast","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":15,"color":"green","icon":"arrow-up"},"statName":"totalTurretsKilled","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":258861,"color":"green","icon":"arrow-up"},"statName":"totalPhysicalDamageDealt","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":713319,"color":"green","icon":"arrow-up"},"statName":"totalMagicDamageDealt","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":0,"color":"green","icon":"arrow-up"},"statName":"totalFirstBlood","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":501,"color":"green","icon":"arrow-up"},"statName":"totalAssists","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":3,"color":"green","icon":"arrow-up"},"statName":"maxChampionsKilled","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}}] 
+
+
+      if($scope.leftSummonerData.championDataFromApi == undefined ||
+         $scope.rightSummonerData.championDataFromApi == undefined){
+         //Display error message?
+         return;
+      }
+
+      /*
+         Compare data of only the selected champions for both sides.
+         Array.prototype.filter makes a copy of the array, so the data
+         is not thrown away
+      */
+      var leftChampionDataFromApi = $scope.leftSummonerData.championDataFromApi
+            .filter(function(championObj){
+               return $scope.leftSummonerData.selectedChampions
+                  .indexOf(championObj.name) != -1;
+            });
+
+      var rightChampionDataFromApi = $scope.rightSummonerData.championDataFromApi
+         .filter(function(championObj){
+            return $scope.rightSummonerData.selectedChampions
+               .indexOf(championObj.name) != -1;
+         });
+
+      var leftSum, rightSum, tableRows = [], statNames = [];
+      var leftIcon = {color: 'orange', icon: 'minus'}, 
+          rightIcon = {color: 'orange', icon: 'minus'};
+
+      //Get number of available stats
+      var numStatsPerChamp = Object.keys($scope.leftSummonerData.championDataFromApi[0].stats).length;
+
+      //Initial stat sum array full of 0's
+      var leftStatSums = [], rightStatSums = [];
+      for(var i=0; i<numStatsPerChamp; i++){
+         leftStatSums[i] = 0;
+         rightStatSums[i] = 0;
+      }
+
+      var index;
+      for(var i=0; i<leftChampionDataFromApi.length; i++){
+
+         index = 0;
+         for(var stat in leftChampionDataFromApi[i].stats){
+            leftStatSums[index++] += leftChampionDataFromApi[i].stats[stat];
+            statNames.push(stat);//Gather stat property names for comparison table
+         }
+      }
+
+      for(var i=0; i<rightChampionDataFromApi.length; i++){
+
+         index = 0;
+         for(var stat in rightChampionDataFromApi[i].stats){
+            rightStatSums[index++] += rightChampionDataFromApi[i].stats[stat];
+         }
+      }
+
+      var difference;
+      for(var i=0; i<statNames.length; i++){
+
+         difference = leftStatSums[i] - rightStatSums[i];
+
+         if(difference < 0){
+            leftIcon = {color: 'Red', icon: 'arrow-down'};
+            rightIcon = {color: 'Blue', icon: 'arrow-up'};
+         } 
+         else if(difference > 0){
+            leftIcon = {color: 'Blue', icon: 'arrow-up'};
+            rightIcon = {color: 'Red', icon: 'arrow-down'};
+         }
+
+
+         tableRows.push({
+            left: {
+               leftStatSum: leftStatSums[i],
+               color: leftIcon.color,
+               icon: leftIcon.icon
+            },
+            statName: statNames[i],
+            right: {
+               rightStatSum: rightStatSums[i],
+               color: rightIcon.color,
+               icon: rightIcon.icon
+            }
+         });
+      }
+
+      $scope.statComparisonTableRows = tableRows;
+      console.log(JSON.stringify($scope.statComparisonTableRows));
+   }
+
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
