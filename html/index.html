@@ -17,26 +17,23 @@
                <span class="icon-bar"></span>
                <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">LoL App</a>
+            <a class="navbar-brand" style="color:white" href="#">LoLInspect</a>
          </div>
          <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-               <li class="active"><a href="#">Stuff</a></li>
+ <!--               <li class="active"><a href="#">Stuff</a></li>
                <li><a href="#">Moar stuff</a></li>
-               <li><a href="#">Even moar stuff!</a></li>
+               <li><a href="#">Even moar stuff!</a></li> -->
             </ul>
          </div>
       </nav>
 
       <div class="content-max-width margin-center">
          <div class="margin-top-100 round-div jumbotron div-bg-color">
-            <h1>Ranked Stat Comparison</h1>
-            <p>Hi, my name is paragraph</p>
+            <h1>League Player Comparison Tool</h1>
+            <p>Compare stats between summoners</p>
          </div>
       </div>
-
-
-
 
 
 
@@ -55,9 +52,11 @@
             </div>
 
 
-            <div ng-controller="MainCtrl" class="inline-b margin-left-15 div-bg-color round-div">
+            <div ng-controller="MainCtrl" id="center-container" class="inline-b">
+      
+                  <champion-list></champion-list>
 
-                  <champion-list></champion-list> 
+                  <stat-comparison></stat-comparison>
 
             </div>
 
