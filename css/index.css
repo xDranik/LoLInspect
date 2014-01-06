@@ -1,5 +1,10 @@
+/*CLEAN UP THIS MESS
+HAVE CLASSES FOR SPECIFIC DIVS TO PREVENT STUFF LIKE...
+class="lkjsdf lkjsdf lkjsdf lkjsdf lkjsdf lkjsdf"
+*/
+
 body{
-   color: grey;
+   color: white;
    background-color: #0b0b0b;
 }
 
@@ -61,6 +66,18 @@ select{
 }
 
 
+
+#stat-comp-container{
+   margin-left: 15px;
+   width: 690px;
+   /*height: 1000px;*/
+}
+
+
+
+
+
+
 #champ-list-container{
    width: 690px;
    height: 280px;
@@ -87,8 +104,9 @@ select{
    margin-left: 15px;
 }
 
-#stat-comp-container{
+#center-container{
    width: 690px;
+   margin-right: 15px;
 }
 
 .inline-b{
@@ -99,6 +117,7 @@ select{
    width: 1150px; 
 }
 
+/*change to round-box*/
 .round-div{
    border-radius: 5px;
 }
@@ -135,10 +154,13 @@ select{
 }
 
 /*Margin bottoms*/
-.margin-bot-30{
-   margin-bottom: 30px;
-}
 
 .margin-bot-15{
    margin-bottom: 15px;
+}
+.margin-bot-30{
+   margin-bottom: 30px;
+}
+.margin-bot-100{
+   margin-bottom: 100px;
 }
