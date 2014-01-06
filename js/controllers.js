@@ -1,7 +1,7 @@
 var app = angular.module('app.controllers', []);
 
 /*
-   LeftSummonerSearchCtrl is responsible for the left columns...
+   LeftSummonerSearchCtrl is responsible for the left sides...
    - Summoner search form
    - Summoner info display
    - Success/Error messages (nodifications?)
@@ -45,11 +45,10 @@ app.controller('LeftSummonerSearchCtrl', function($scope, $http, $timeout, RiotA
 
    $scope.summonerData = LeftSummonerDataService;
 
-
 });
 
 /*
-   RightSummonerSearchCtrl is responsible for the right columns...
+   RightSummonerSearchCtrl is responsible for the right sides...
    - Summoner search form
    - Summoner info display
    - Success/Error messages (nodifications?)
@@ -105,7 +104,7 @@ app.controller('RightSummonerSearchCtrl', function($scope, $http, $timeout, Riot
 */
 app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummonerDataService){
 
-   //Think about a seperate controller for stat comp and champ select
+   //Think about seperate controllers for stat comp and champ select
 
    $scope.fromCamelCase = function(string){
       if(string == 'FiddleSticks') return 'Fiddlesticks';
@@ -119,13 +118,16 @@ app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummon
 
    $scope.selectChampion = function(champName){
 
+      //Grab data from the side that's in control (left radio = Blue, right radio = Red)
       var summonerData = ($scope.radioColor == 'Blue') ? $scope.leftSummonerData : $scope.rightSummonerData;
       var nameIndex = summonerData.selectedChampions.indexOf(champName);
 
       if(nameIndex == -1){
+         //Selected champion isn't in the list, so add it
          summonerData.selectedChampions.push(champName);
       }
       else{
+         //Selected champion is in the list, so remove it
          summonerData.selectedChampions.splice(nameIndex, 1);
       }
 
@@ -140,7 +142,7 @@ app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummon
       return champName.match(regexp)==null?false:true;
    }
 
-   //get this info from Riot's api!
+   //get this info from Riot's api! Keep for now to decrease API calls
    $scope.championNames = ["Aatrox", "Ahri", "Akali", "Alistar", "Amumu", "Anivia", "Annie", 
       "Ashe", "Blitzcrank", "Brand", "Caitlyn", "Cassiopeia", "Chogath", "Corki", "Darius", 
       "Diana", "Draven", "DrMundo", "Elise", "Evelynn", "Ezreal", "FiddleSticks", "Fiora", 
@@ -168,8 +170,8 @@ app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummon
    $scope.showStatCompareTable = false;
 
    /*
-      Swap the champions selected by the old side with
-      the champions selected by the new side 
+      Swap the champions highlighted by the old side with
+      the champions highlighted by the current side 
       (fired on radio button change)
    */
    $scope.$watch('radioColor', function(currVal, oldVal){
@@ -202,10 +204,12 @@ app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummon
 
       // $scope.statComparisonTableRows = [{"left":{"leftStatSum":36,"color":"green","icon":"arrow-up"},"statName":"totalSessionsPlayed","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":17,"color":"green","icon":"arrow-up"},"statName":"totalSessionsLost","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":19,"color":"green","icon":"arrow-up"},"statName":"totalSessionsWon","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":35,"color":"green","icon":"arrow-up"},"statName":"totalChampionKills","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":972895,"color":"green","icon":"arrow-up"},"statName":"totalDamageDealt","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":864959,"color":"green","icon":"arrow-up"},"statName":"totalDamageTaken","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":3,"color":"green","icon":"arrow-up"},"statName":"mostChampionKillsPerSession","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":898,"color":"green","icon":"arrow-up"},"statName":"totalMinionKills","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":0,"color":"green","icon":"arrow-up"},"statName":"totalDoubleKills","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":0,"color":"green","icon":"arrow-up"},"statName":"totalTripleKills","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":0,"color":"green","icon":"arrow-up"},"statName":"totalQuadraKills","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":0,"color":"green","icon":"arrow-up"},"statName":"totalPentaKills","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":0,"color":"green","icon":"arrow-up"},"statName":"totalUnrealKills","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":314762,"color":"green","icon":"arrow-up"},"statName":"totalGoldEarned","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":0,"color":"green","icon":"arrow-up"},"statName":"mostSpellsCast","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":15,"color":"green","icon":"arrow-up"},"statName":"totalTurretsKilled","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":258861,"color":"green","icon":"arrow-up"},"statName":"totalPhysicalDamageDealt","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":713319,"color":"green","icon":"arrow-up"},"statName":"totalMagicDamageDealt","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":0,"color":"green","icon":"arrow-up"},"statName":"totalFirstBlood","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":501,"color":"green","icon":"arrow-up"},"statName":"totalAssists","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}},{"left":{"leftStatSum":3,"color":"green","icon":"arrow-up"},"statName":"maxChampionsKilled","right":{"rightStatSum":0,"color":"red","icon":"arrow-down"}}] 
 
-
+      //If one of the sides does NOT have a valid summoner...
       if($scope.leftSummonerData.championDataFromApi == undefined ||
          $scope.rightSummonerData.championDataFromApi == undefined){
-         //Display error message?
+
+         //Display error message
+
          return;
       }
 
@@ -227,10 +231,12 @@ app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummon
          });
 
       var leftSum, rightSum, tableRows = [], statNames;
-      var leftIcon = {color: 'orange', icon: 'minus'}, 
-          rightIcon = {color: 'orange', icon: 'minus'};
 
-      //Get number of available stats
+      //Color and icon info for glyphicons in stat comparison table
+      var leftIcon = {color: 'Orange', icon: 'minus'}, 
+          rightIcon = {color: 'Orange', icon: 'minus'};
+
+      //Get stat names from champion object
       var statNames = Object.keys($scope.leftSummonerData.championDataFromApi[0].stats);
 
       //Initial stat sum array full of 0's
@@ -241,18 +247,22 @@ app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummon
       }
 
       var index;
+      //Sum all champion stats for left side summoner
       for(var i=0; i<leftChampionDataFromApi.length; i++){
 
          index = 0;
+         //Add champion stats to overall sum
          for(var stat in leftChampionDataFromApi[i].stats){
             leftStatSums[index++] += leftChampionDataFromApi[i].stats[stat];
          }
          
       }
 
+      //Sum all champion stats for right side summoner
       for(var i=0; i<rightChampionDataFromApi.length; i++){
 
          index = 0;
+         //Add champion stats to overall sum
          for(var stat in rightChampionDataFromApi[i].stats){
             rightStatSums[index++] += rightChampionDataFromApi[i].stats[stat];
          }
@@ -263,6 +273,7 @@ app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummon
 
          difference = leftStatSums[i] - rightStatSums[i];
 
+         //Change glyphicon color and icon depending on stat difference
          if(difference < 0){
             leftIcon = {color: 'Red', icon: 'arrow-down'};
             rightIcon = {color: 'Blue', icon: 'arrow-up'};
@@ -271,7 +282,6 @@ app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummon
             leftIcon = {color: 'Blue', icon: 'arrow-up'};
             rightIcon = {color: 'Red', icon: 'arrow-down'};
          }
-
 
          tableRows.push({
             left: {
@@ -286,6 +296,7 @@ app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummon
                icon: rightIcon.icon
             }
          });
+
       }
 
       $scope.statComparisonTableRows = tableRows;
@@ -293,27 +304,3 @@ app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummon
    }
 
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

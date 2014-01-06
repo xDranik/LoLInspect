@@ -11,7 +11,7 @@ app.factory('RiotApiService', function(){
    /*
       Retrieves a summoners level and ID, given their summoner name.
       The ID is used in riotApiService.getSummonerRankedStats to retrieve
-      a summoners champion data
+      that summoners champion data
    */
    riotApiService.getSummonerInfoFromName = function($scope, $http, $timeout){
 
@@ -50,6 +50,7 @@ app.factory('RiotApiService', function(){
          $scope.summonerData.summonerInfo.name = data.name;
          $scope.summonerData.summonerInfo.level = data.summonerLevel;
 
+         //Get this summoners champion data using their summoner id (data.id)
          riotApiService.getSummonerRankedStats($scope, $http, data.id, $timeout)
 
       })
