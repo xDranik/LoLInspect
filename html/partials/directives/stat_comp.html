@@ -1,31 +1,35 @@
-<h3 ng-bind="championData.leftChampionData.displayName" style="text-align:center"></h3>
-<h3 style="text-align:center">vs.</h3>
-<h3 ng-bind="championData.rightChampionData.displayName" style="text-align:center"></h3>
 
-<button type="button" class="btn btn-danger" ng-click="compareStats()">
-   Compare Stats!
-</button>
+<!-- ng-show="statComparisonTableRows.length > 0" -->
+<div ng-show="leftSummonerData.selectedChampions.length > 0 || rightSummonerData.selectedChampions.length > 0" id="stat-comp-container" class="div-bg-color round-div margin-bot-100" style="padding:30px 0 30px 0">
 
-<div ng-show="statTableRows.length > 0">
-   <hr>
-   <p>Results:</p>
-   
-   <table class="table table-bordered">
-      <tr ng-repeat="statRow in statTableRows">
+   <table ng-show="true" class="table table-bordered round-div" style="width:600px;margin:auto">
+
+      <thead>
+         <tr>
+            <th style="text-align:right">{{leftSummonerData.summonerInfo.name}}'s <br> Stats</th>
+            <th style="text-align:center;width:300px;">Stat Names</th>
+            <th style="text-align:right">{{rightSummonerData.summonerInfo.name}}'s <br> Stats</th>
+         </tr>
+      </thead>
+
+      <tr ng-repeat="row in statComparisonTableRows">
 
          <td style="text-align:right">
-            {{statRow.left.stats}} 
-            <span class="glyphicon glyphicon-{{statRow.left.icon}}" style="color: {{statRow.left.color}};"></span>
+            {{row.left.leftStatSum}}
+            <span class="glyphicon glyphicon-{{row.left.icon}} {{row.left.color}}"></span>
          </td>
 
-         <td style="text-align:center">{{statRow.statName}}</td>
+         <td style="text-align:center">
+            {{fromCamelCase(row.statName)}}
+         </td>
 
          <td style="text-align:right">
-            {{statRow.right.stats}}
-            <span class="glyphicon glyphicon-{{statRow.right.icon}}" style="color: {{statRow.right.color}};"></span>
+            {{row.right.rightStatSum}}
+            <span class="glyphicon glyphicon-{{row.right.icon}} {{row.right.color}}"></span>
          </td>
 
       </tr>
+
    </table>
 
 </div>
