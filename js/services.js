@@ -13,7 +13,7 @@ app.factory('RiotApiService', function(){
       The ID is used in riotApiService.getSummonerRankedStats to retrieve
       a summoners champion data
    */
-   riotApiService.getSummonerInfoFromName = function($scope, $http){
+   riotApiService.getSummonerInfoFromName = function($scope, $http, $timeout){
 
       var region = $scope.region.toLowerCase();
       var summonerName = $scope.summonerName || '';
@@ -41,13 +41,16 @@ app.factory('RiotApiService', function(){
             $scope.failure.message = 'Requires level 30';
             $scope.failure.show = true;
 
-            $scope.summonerInfo = undefined;
-            $scope.summonerChampionData = undefined;
+            $scope.summonerData.summonerInfo.name = undefined;
+            $scope.summonerData.summonerInfo.level = undefined;
+            $scope.summonerData.championDataFromApi = undefined;
             return;
          }
 
-         $scope.summonerInfo = data;
-         riotApiService.getSummonerRankedStats($scope, $http, data.id)
+         $scope.summonerData.summonerInfo.name = data.name;
+         $scope.summonerData.summonerInfo.level = data.summonerLevel;
+
+         riotApiService.getSummonerRankedStats($scope, $http, data.id, $timeout)
 
       })
       .error(function(data, status, headers, config){
@@ -60,8 +63,9 @@ app.factory('RiotApiService', function(){
          $scope.failure.message = 'Incorrect Info';
          $scope.failure.show = true;
 
-         $scope.summonerInfo = undefined;
-         $scope.summonerChampionData = undefined;
+         $scope.summonerData.summonerInfo.name = undefined;
+         $scope.summonerData.summonerInfo.level = undefined;
+         $scope.summonerData.championDataFromApi = undefined;
 
       });
    };
@@ -69,7 +73,7 @@ app.factory('RiotApiService', function(){
    /*
       Retrieves a summoners champion data given their summonerID.
    */
-   riotApiService.getSummonerRankedStats = function($scope, $http, summonerID){
+   riotApiService.getSummonerRankedStats = function($scope, $http, summonerID, $timeout){
 
       $http({
          method: 'GET',
@@ -79,10 +83,15 @@ app.factory('RiotApiService', function(){
       .success(function(data, status, headers, config){
 
          console.log(data);
-         $scope.summonerChampionData = data.champions;
+         $scope.summonerData.championDataFromApi = data.champions;
 
          $scope.failure.show = false;
          $scope.success.show = true;
+
+         //Hide notification after 3 seconds
+         $timeout(function(){
+            $scope.success.show = false;
+         }, 3000);
 
       })
       .error(function(data, status, headers, config){
@@ -95,8 +104,9 @@ app.factory('RiotApiService', function(){
          $scope.success.show = false;
          $scope.failure.show = true;
 
-         $scope.summonerInfo = undefined;
-         $scope.summonerChampionData = undefined;
+         $scope.summonerData.summonerInfo.name = undefined;
+         $scope.summonerData.summonerInfo.level = undefined;
+         $scope.summonerData.championDataFromApi = undefined;
          
       });
    };
@@ -113,9 +123,13 @@ app.factory('RiotApiService', function(){
 app.factory('LeftSummonerDataService', function(){
 
    return{
-      summonerName: undefined,
-      selectedChampions: []
-   }
+      summonerInfo:{
+         name: undefined,
+         level: undefined
+      },
+      selectedChampions: [],
+      championDataFromApi: undefined
+   };
 
 });
 
@@ -126,8 +140,12 @@ app.factory('LeftSummonerDataService', function(){
 app.factory('RightSummonerDataService', function(){
 
    return{
-      summonerName: undefined,
-      selectedChampions: []
-   }
+      summonerInfo:{
+         name: undefined,
+         level: undefined
+      },
+      selectedChampions: [],
+      championDataFromApi: undefined
+   };
 
 });
