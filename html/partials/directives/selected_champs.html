@@ -1,17 +1,17 @@
-<div ng-show="summonerInfo != undefined && summonerChampionData != undefined" class="div-bg-color round-div" style="width:210px;padding:10px 15px">
+<div ng-show="summonerData.summonerInfo != undefined && summonerData.championDataFromApi != undefined" class="div-bg-color round-div" style="width:210px;padding:10px 15px">
 
    <div>
-      <h5>Name: {{summonerInfo.name}}</h5>
-      <h5>Level: {{summonerInfo.summonerLevel}}</h5>
+      <h5>Name: {{summonerData.summonerInfo.name}}</h5>
+      <h5>Level: {{summonerData.summonerInfo.level}}</h5>
    </div>
 
    <div>
       Selected Champions ( <span class="{{summonerColor}}">{{summonerData.selectedChampions.length}}</span> ) : 
       <br>
-      <a href="#" ng-click="toggleSelectedChampionList()" ng-bind="showOrHideSelectedChampions"></a>
+      <a href="" ng-click="toggleSelectedChampionList()" ng-bind="showOrHideSelectedChampions"></a>
 
       <ul id="{{summonerColor}}-list">
-         <li ng-repeat="champion in summonerData.selectedChampions">{{champion}}</li>
+         <li ng-repeat="champion in summonerData.selectedChampions">{{fromCamelCase(champion)}}</li>
       </ul>
    </div>
 

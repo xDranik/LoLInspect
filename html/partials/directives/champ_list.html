@@ -1,4 +1,4 @@
-<div id="stat-comp-container" class="margin-bot-30">
+<div class="margin-bot-30 inline-b margin-left-15 div-bg-color round-div" style="height:450px">
 
    <div id="champ-list-assists" class="margin-top-10 margin-bot-30">
 
@@ -22,7 +22,7 @@
 
    <div id="champ-list-container" class="margin-center">
 
-      <div ng-show="nameMatches(championSearchName,name)" ng-click="selectChampion(name)" id="{{name}}" class="champ-div" ng-repeat="name in championNames">
+      <div ng-show="nameMatches(championSearchName,fromCamelCase(name))" ng-click="selectChampion(name)" id="{{name}}" class="champ-div" ng-repeat="name in championNames">
 
          <img ng-src="../external/images/champions/{{name}}_Square_0.png" alt="{{name}} img" class="champ-icon" height="50px" width="50px">
 
@@ -32,5 +32,10 @@
       </div>
 
    </div>
+
+   <button ng-click="compareStats()" class="btn btn-default margin-top-20" style="float:right;background-color:black;color:grey;margin-right:30px">   Compare Stats
+      <span class="glyphicon glyphicon-arrow-right Blue"></span>
+      <span class="glyphicon glyphicon-arrow-left Red"></span>
+   </button>
 
 </div>
