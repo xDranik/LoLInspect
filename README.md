@@ -1,12 +1,25 @@
-LoL_app
+LoLInspect
 =======
-Web Application using the League of Legends API, built with AngularJS.<br/>
-This App allows users to search for summoners and compare their stats with specific champions (or overall).
-
-You'll need to set up a few things to get this to work:
-* Include a global var in js/controllers.js named `apikey` and set that equal to your API key. Or load it from js/ihazkey.js in your html like I did (haha)
-* Have the  code running on a webserver so the AJAX requests to Riot's API can be made
+LoLInspect is a Web Application built using the Riot Games API and AngularJS. <br/>
+LoLInspect is a player comparison tool used to compare stats between summoners.
 
 ### Sample Images:
-![](https://raw.github.com/xDranik/LoL_app/master/samples/LeagueApp2.png?raw=true)
-![](https://raw.github.com/xDranik/LoL_app/master/samples/LeagueApp1.png?raw=true)
+
+#### What you see when you hit the index page:
+![](https://raw.github.com/xDranik/LoL_app/master/samples/index.png?raw=true)
+<br>
+
+#### After searching two summoners and selecting a few champions for the blue side:
+![](https://raw.github.com/xDranik/LoL_app/master/samples/blue-champ-select.png?raw=true)
+<br>
+
+#### Selecting champions for the red side after filtering the list:
+![](https://raw.github.com/xDranik/LoL_app/master/samples/red-champ-select-and-filter.png?raw=true)
+<br>
+
+#### Top half of the results from the stat comparison of both summoners champions:
+![](https://raw.github.com/xDranik/LoL_app/master/samples/stat-table-top.png?raw=true)
+<br>
+
+#### Bottom half of the results from the stat comparison of both summoners champions:
+![](https://raw.github.com/xDranik/LoL_app/master/samples/stat-table-bottom.png?raw=true)
