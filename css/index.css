@@ -157,6 +157,11 @@ select{
    margin-left: 30px;
 }
 
+/*Margin rights*/
+.margin-right-15{
+   margin-right: 15px;
+}
+
 /*Margin bottoms*/
 
 .margin-bot-15{
