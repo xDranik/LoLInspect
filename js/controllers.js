@@ -10,6 +10,7 @@ var app = angular.module('app.controllers', []);
 */
 app.controller('LeftSummonerSearchCtrl', function($scope, $http, $timeout, RiotApiService, LeftSummonerDataService){
 
+   //Use $rootScope for functions in all controllers?
    $scope.fromCamelCase = function(string){
       if(string == 'FiddleSticks') return 'Fiddlesticks';
       if(string == 'JarvanIV') return 'Jarvan IV';
@@ -57,6 +58,7 @@ app.controller('LeftSummonerSearchCtrl', function($scope, $http, $timeout, RiotA
 */
 app.controller('RightSummonerSearchCtrl', function($scope, $http, $timeout, RiotApiService, RightSummonerDataService){
 
+   //Use $rootScope for functions in all controllers?
    $scope.fromCamelCase = function(string){
       if(string == 'FiddleSticks') return 'Fiddlesticks';
       if(string == 'JarvanIV') return 'Jarvan IV';
@@ -102,10 +104,11 @@ app.controller('RightSummonerSearchCtrl', function($scope, $http, $timeout, Riot
    - Champion selections for both sides (blue and red)
    - Sharing top secret information with LeftSummonerDataService and RightSummonerDataService (haha)
 */
-app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummonerDataService){
+app.controller('MainCtrl', function($scope, $timeout, LeftSummonerDataService, RightSummonerDataService){
 
    //Think about seperate controllers for stat comp and champ select
 
+   //Use $rootScope for functions in all controllers?
    $scope.fromCamelCase = function(string){
       if(string == 'FiddleSticks') return 'Fiddlesticks';
       if(string == 'JarvanIV') return 'Jarvan IV';
@@ -143,7 +146,7 @@ app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummon
    }
 
    //get this info from Riot's api! Keep for now to decrease API calls
-   $scope.championNames = ["Aatrox", "Ahri", "Akali", "Alistar", "Amumu", "Anivia", "Annie", 
+   $scope.allChampNames = ["Aatrox", "Ahri", "Akali", "Alistar", "Amumu", "Anivia", "Annie", 
       "Ashe", "Blitzcrank", "Brand", "Caitlyn", "Cassiopeia", "Chogath", "Corki", "Darius", 
       "Diana", "Draven", "DrMundo", "Elise", "Evelynn", "Ezreal", "FiddleSticks", "Fiora", 
       "Fizz", "Galio", "Gangplank", "Garen", "Gragas", "Graves", "Hecarim", "Heimerdinger", 
@@ -158,6 +161,8 @@ app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummon
       "Vladimir", "Volibear", "Warwick", "Xerath", "XinZhao", "Yasuo", "Yorick", "Zac", "Zed", "Ziggs", 
       "Zilean", "Zyra"];
 
+   $scope.champsToDisplay = $scope.allChampNames;
+
    $scope.championSearchName = '';
 
    $scope.leftSummonerData = LeftSummonerDataService;
@@ -169,6 +174,66 @@ app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummon
 
    $scope.showStatCompareTable = false;
 
+   $scope.success = {show:false, message: 'Compare Successfull'};
+   $scope.failure = {show:false, message: 'Requires valid Summoner on both sides'};
+
+   /*
+      Fired when a new summoner is searched on the left side. If the radio
+      button is set to 'Blue', only champions that the left summoner has played
+      should be shown in the champion selection list.
+   */
+   $scope.$watchCollection('leftSummonerData.championDataFromApi', function(currVal, oldVal){
+
+      /*
+         If a new summoner is being searched on the left side, and
+         the champion list is showing the champions of the left summoner,
+         update the champion list with the new summoenrs champions
+      */
+      if(currVal != undefined && $scope.radioColor == 'Blue'){
+
+         var tmpChampionNames = currVal.map(function(champObj){
+            return champObj.name;
+         });
+         tmpChampionNames.splice(tmpChampionNames.indexOf('Combined'), 1)
+         $scope.champsToDisplay = tmpChampionNames.sort();
+
+         $scope.leftSummonerData.selectedChampions =
+            $scope.leftSummonerData.selectedChampions.filter(function(champName){
+               return $scope.champsToDisplay.indexOf(champName) != -1;
+            });
+      }
+
+   });
+
+   /*
+      Fired when a new summoner is searched on the right side. If the radio
+      button is set to 'Blue', only champions that the right summoner has played
+      should be shown in the champion selection list.
+   */
+   $scope.$watchCollection('rightSummonerData.championDataFromApi', function(currVal, oldVal){
+      
+
+      /*
+         If a new summoner is being searched on the right side, and
+         the champion list is showing the champions of the right summoner,
+         update the champion list with the new summoenrs champions
+      */
+      if(currVal != undefined && $scope.radioColor == 'Red'){
+
+         var tmpChampionNames = currVal.map(function(champObj){
+            return champObj.name;
+         });
+         tmpChampionNames.splice(tmpChampionNames.indexOf('Combined'), 1)
+         $scope.champsToDisplay = tmpChampionNames.sort();
+
+         $scope.rightSummonerData.selectedChampions =
+            $scope.rightSummonerData.selectedChampions.filter(function(champName){
+               return $scope.champsToDisplay.indexOf(champName) != -1;
+            });
+      }
+
+   });
+
    /*
       Swap the champions highlighted by the old side with
       the champions highlighted by the current side 
@@ -179,24 +244,41 @@ app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummon
       //If radio button changed...switch all the colors!!
       if(currVal != oldVal){
 
-         var oldSelectedChampions, currSelectedChampions;
+         var prevSummonerData, currSummonerData;
 
          if(oldVal == 'Blue'){
-            oldSelectedChampions = $scope.leftSummonerData.selectedChampions;
-            currSelectedChampions = $scope.rightSummonerData.selectedChampions;
+            prevSummonerData = $scope.leftSummonerData;
+            currSummonerData = $scope.rightSummonerData;
          }
          else{
-            oldSelectedChampions = $scope.rightSummonerData.selectedChampions;
-            currSelectedChampions = $scope.leftSummonerData.selectedChampions;
+            prevSummonerData = $scope.rightSummonerData;
+            currSummonerData = $scope.leftSummonerData;
          }
 
-         for(var i=0; i<oldSelectedChampions.length; i++){
-            $('#'+oldSelectedChampions[i]).removeClass('selected-'+oldVal);
+         for(var i=0; i<prevSummonerData.selectedChampions.length; i++){
+            $('#'+prevSummonerData.selectedChampions[i]).removeClass('selected-'+oldVal);
          }
-         for(var i=0; i<currSelectedChampions.length; i++){
-            $('#'+currSelectedChampions[i]).addClass('selected-'+currVal);
+
+
+         if(currSummonerData.championDataFromApi != undefined){
+            $scope.champsToDisplay = currSummonerData.championDataFromApi.map(function(champObj){
+               return champObj.name;
+            }).sort();
+            $scope.champsToDisplay.splice($scope.champsToDisplay.indexOf('Combined'), 1);
          }
+         else{
+            $scope.champsToDisplay = $scope.allChampNames;
+         }
+
+
+         setTimeout(function(){
+            for(var i=0; i<currSummonerData.selectedChampions.length; i++){
+               $('#'+currSummonerData.selectedChampions[i]).addClass('selected-'+currVal);
+            }
+         }, 0);
+
       }
+
    });
 
 
@@ -208,8 +290,7 @@ app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummon
       if($scope.leftSummonerData.championDataFromApi == undefined ||
          $scope.rightSummonerData.championDataFromApi == undefined){
 
-         //Display error message
-
+         $scope.failure.show = true;
          return;
       }
 
@@ -301,6 +382,11 @@ app.controller('MainCtrl', function($scope, LeftSummonerDataService, RightSummon
 
       $scope.statComparisonTableRows = tableRows;
       $scope.showStatCompareTable = true;
+
+      $scope.success.show = true;
+      $timeout(function(){
+         $scope.success.show = false;
+      }, 3000);
    }
 
 });
