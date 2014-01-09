@@ -16,11 +16,16 @@
 
 
    <div ng-show="success.show" class="alert alert-success margin-center width-165 margin-bot-30">
-      <p style="font-size:13px">{{success.message}}<button ng-click="success.show=false" type="button" class="close">&times;</button> </p>
+      <p style="font-size:13px">
+         {{success.message}}
+      </p>
    </div>
 
    <div ng-show="failure.show" class="alert alert-danger margin-center width-165 margin-bot-30">
-      <p style="font-size:13px">{{failure.message}}<button ng-click="failure.show=false" type="button" class="close">&times;</button> </p>
+      <p style="font-size:13px">
+         {{failure.message}}
+         <button ng-click="failure.show=false" type="button" class="close">&times;</button>
+      </p>
    </div>
 
 </div>
