@@ -294,6 +294,8 @@ app.controller('MainCtrl', function($scope, $timeout, LeftSummonerDataService, R
          return;
       }
 
+      $scope.failure.show = false;
+
       /*
          Compare data of only the selected champions for both sides.
          Array.prototype.filter makes a copy of the array, so the data
