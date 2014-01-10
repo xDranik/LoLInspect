@@ -3,6 +3,12 @@ HAVE CLASSES FOR SPECIFIC DIVS TO PREVENT STUFF LIKE...
 class="lkjsdf lkjsdf lkjsdf lkjsdf lkjsdf lkjsdf"
 */
 
+ canvas{
+     width: 100% !important;
+     max-width: 800px;
+     height: auto !important;
+ }
+
 body{
    color: white;
    background-color: #0b0b0b;
